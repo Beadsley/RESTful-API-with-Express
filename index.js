@@ -66,28 +66,28 @@ app.get('/api/presidents/:id', (req, res, next) => {
 // validate data (is a number), contains right info. 
 // validate date is not above the current date
 // check if president already exists
-app.post('/api/presidents', (req, res, next) => {
-  let reqData = req.body;
+app.post('/api/presidents', (req, res) => {
+
   const contentType = req.headers['content-type'];
 
   if (contentType === 'application/json') {
+    let reqData = req.body;
     const id = nextId(presidents).toString();
     const data = Object.assign({ id }, reqData);
     presidents.push(data);
     res.status(201).json(data);
   }
-  else if (contentType !== 'application/json') {
-    res.status(400).send('invalid request');
-  }
   else {
-    // other status ????
+    res.status(400).send('invalid request');
   }
 
 });
 
 //check when updating id
 app.put('/api/presidents/:id', (req, res) => {
+
   const contentType = req.headers['content-type'];
+
   if (contentType === 'application/json') {
     let reqData = req.body;
     let id = req.params.id;
@@ -102,15 +102,18 @@ app.put('/api/presidents/:id', (req, res) => {
   else {
     res.status(400).send('invalid request');
   }
+
 });
 
 
 app.delete('/api/presidents/:id', (req, res) => {
-  let id = req.params.id;
+
+  const id = req.params.id;
   const index = getPresidentIndex(id);
+
   if (index !== -1) {
     removePresident(index);
-    res.status(204).end(); // is end needed ???     
+    res.status(204).send('File removed'); 
   } else {
     res.status(404).send('File not found');
   }
