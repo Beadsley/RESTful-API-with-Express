@@ -41,19 +41,14 @@ app.get('/api/presidents', (req, res, next) => {
 // GET ONE
 app.get('/api/presidents/:id', (req, res, next) => {
   let id = req.params.id;
-  let exists = false;
   if (req.headers['accept'] === 'application/json') {
-    presidents.forEach(president => {
-      if (president.id === id) {
-        exists = true;
-        res.json(president);
-      }
-    });
-    if (!exists) {
-      // 404 not found
+    const president = getPresident(id);
+    if (president) {
+      res.json(president);
+    }
+    else {
       res.status(404).send('Not Found');
     }
-
   }
   else {
     // 400 bad request ??
@@ -84,7 +79,7 @@ app.post('/api/presidents', (req, res, next) => {
 });
 
 const getPresident = (id) => {
-  return presidents.find(president=>president.id===id)
+  return presidents.find(president => president.id === id)
 }
 
 
