@@ -33,6 +33,9 @@ app.get('/api/presidents', (req, res, next) => {
   if (req.headers['accept'] === 'application/json') {
     res.json(presidents);
   }
+  else if (req.headers['accept'] !== 'application/json') {
+    res.status(400).send('invalid request');
+  }
   else {
     // 400 bad request ? ?
     res.status(404).send('Not Found');
@@ -49,6 +52,9 @@ app.get('/api/presidents/:id', (req, res, next) => {
     else {
       res.status(404).send('Not Found');
     }
+  }
+  else if (req.headers['accept'] !== 'application/json') {
+    res.status(400).send('invalid request');
   }
   else {
     // 400 bad request ??
@@ -68,10 +74,10 @@ app.post('/api/presidents', (req, res, next) => {
     const id = nextId(presidents).toString();
     const data = Object.assign({ id }, reqData);
     presidents.push(data);
-    res.json(data);
+    res.status(201).json(data);
   }
   else if (contentType !== 'application/json') {
-    res.status(400).send('Wrong content type');
+    res.status(400).send('invalid request');
   }
   else {
     // other status ????
@@ -86,7 +92,7 @@ app.put('/api/presidents/:id', (req, res) => {
   const index = getPresidentIndex(id);
   if (index !== -1) {
       updatePresident(index, reqData)
-      res.end();
+      res.status(200).send('File updated');
   } else {
     res.status(204).send('File not found');
   }

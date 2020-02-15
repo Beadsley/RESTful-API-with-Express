@@ -43,7 +43,7 @@ describe('The /presidents API', function () {
       .post(`/api/presidents`)
       .set('Content-Type', 'application/json')
       .send(pres)
-      .expect(200);
+      .expect(201);
 
     const id = r1.body.id;
 
@@ -87,7 +87,7 @@ describe('The /presidents API', function () {
       .post(`/api/presidents`)
       .set('Content-Type', 'application/json')
       .send(pres)
-      .expect(200);
+      .expect(201);
 
     const id = r1.body.id;    
 
