@@ -58,6 +58,7 @@ app.get('/api/presidents/:id', (req, res, next) => {
 
 // CREATE
 // validate data (is a number), contains right info. 
+// validate date is not above the current date
 // check if president already exists
 app.post('/api/presidents', (req, res, next) => {
   let reqData = req.body;

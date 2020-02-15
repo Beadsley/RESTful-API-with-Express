@@ -45,17 +45,17 @@ describe('The /presidents API', function () {
       .send(pres)
       .expect(200);
 
-     const id = r1.body.id;
-      
+    const id = r1.body.id;
+
 
     const r2 = await request(app)
-      .get(`/api/presidents/`+id)
+      .get(`/api/presidents/` + id)
       .set('Accept', 'application/json')
       .expect(200);
 
-      const expected = Object.assign({ id }, pres);
-      
-      assert.deepEqual(r2.body, expected);
+    const expected = Object.assign({ id }, pres);
+
+    assert.deepEqual(r2.body, expected);
 
   });
 
@@ -89,10 +89,37 @@ describe('The /presidents API', function () {
       .send(pres)
       .expect(200);
 
-     const id = r1.body.id;     
+    const id = r1.body.id;
 
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(200);
     await request(app).delete(`/api/presidents/${id}`).expect(204);
+  });
+
+  it('should update based on id', async () => {
+
+    const id = '44'
+
+    const pres = {
+      id: id,
+      from: '2010',
+      to: '3000',
+      name: 'Barack Obama'
+    }
+
+    const r1 = await request(app)
+      .put(`/api/presidents`)
+      .set('Content-Type', 'application/json')
+      .send(pres)
+      .expect(200);
+
+
+    const r2 = await request(app)
+      .get(`/api/presidents/` + id)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+      assert.deepEqual(r2.body, pres);
+
   });
 
 });
