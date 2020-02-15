@@ -29,6 +29,21 @@ describe('The /presidents API', function () {
       .get('/api/presidents/1')
       .set('Accept', 'application/json')
       .expect(404);
+
+      const id = '1'
+
+      const pres = {
+        id: id,
+        from: '2010',
+        to: '3000',
+        name: 'Barack Obama'
+      }
+  
+      const r1 = await request(app)
+        .put(`/api/presidents/`+id)
+        .set('Content-Type', 'application/json')
+        .send(pres)
+        .expect(204);
   });
 
   it('create new president', async () => {
@@ -59,7 +74,7 @@ describe('The /presidents API', function () {
 
   });
 
-  it('reject creation due to wrong content type', async () => {
+  it('reject POST and PUT due to wrong content type', async () => {
 
     const pres = {
       from: '2008',
@@ -67,8 +82,14 @@ describe('The /presidents API', function () {
       name: 'Charles Darwin'
     }
 
-    const r1 = await request(app)
+    await request(app)
       .post(`/api/presidents`)
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .send(pres)
+      .expect(400);
+
+    await request(app)
+      .put(`/api/presidents/43`)
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .send(pres)
       .expect(400);

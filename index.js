@@ -87,14 +87,20 @@ app.post('/api/presidents', (req, res, next) => {
 
 //check when updating id
 app.put('/api/presidents/:id', (req, res) => {
-  let reqData = req.body;
-  let id = req.params.id;
-  const index = getPresidentIndex(id);
-  if (index !== -1) {
+  const contentType = req.headers['content-type'];
+  if (contentType === 'application/json') {
+    let reqData = req.body;
+    let id = req.params.id;
+    const index = getPresidentIndex(id);
+    if (index !== -1) {
       updatePresident(index, reqData)
       res.status(200).send('File updated');
-  } else {
-    res.status(204).send('File not found');
+    } else {
+      res.status(204).send('File not found');
+    }
+  }
+  else {
+    res.status(400).send('invalid request');
   }
 });
 
@@ -102,7 +108,7 @@ app.put('/api/presidents/:id', (req, res) => {
 app.delete('/api/presidents/:id', (req, res) => {
   let id = req.params.id;
   const index = getPresidentIndex(id);
-  if (index !== -1) {    
+  if (index !== -1) {
     removePresident(index);
     res.status(204).end(); // is end needed ???     
   } else {
@@ -124,7 +130,7 @@ const updatePresident = (index, data) => {
 }
 
 const removePresident = (index) => {
-  presidents.splice(index, 1); 
+  presidents.splice(index, 1);
 }
 
 
