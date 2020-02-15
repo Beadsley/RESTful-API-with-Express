@@ -75,7 +75,7 @@ describe('The /presidents API', function () {
 
   });
 
-  it('create -> get -> delete', async () => {
+  it('create -> get -> delete -> get', async () => {
 
     const pres = {
       from: '2008',
@@ -89,10 +89,22 @@ describe('The /presidents API', function () {
       .send(pres)
       .expect(200);
 
-    const id = r1.body.id;
+    const id = r1.body.id;    
 
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(200);
     await request(app).delete(`/api/presidents/${id}`).expect(204);
+    await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
+      
+  });
+
+  it.only('-> delete -> get', async () => {
+    
+    const id = 43;
+
+    await request(app).delete(`/api/presidents/${id}`).expect(204);
+    await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
+          
+      
   });
 
   it('should update based on id', async () => {
