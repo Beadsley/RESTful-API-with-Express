@@ -29,6 +29,35 @@ const nextId = (presidents) => {
 };
 
 // YOUR ENDPOINTS HERE
+app.get('/api/presidents', (req, res, next) => {
+  if (req.headers['accept'] === 'application/json') {
+    res.json(presidents);
+  }
+  else {
+    res.status(400).send('wrong content type');
+  }
+});
+
+app.get('/api/presidents/:id', (req, res, next) => {
+  let id = req.params.id;
+  let exists = false;
+  if (req.headers['accept'] === 'application/json') { 
+    presidents.forEach(president => {
+        if (president.id === id){
+          exists = true;
+          res.json(president);
+        }
+    });
+    if (!exists){
+      res.send('Doesnt exist');
+    }
+    
+  }
+  else {
+    res.status(400).send('wrong content type');
+  }
+});
+
 
 
 module.exports.app = app;
