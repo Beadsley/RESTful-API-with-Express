@@ -98,10 +98,9 @@ app.delete('/api/presidents/:id', (req, res) => {
   const index = getPresidentIndex(id);
   if (index !== -1) {    
     removePresident(index);
-    //presidents.splice(index, 1); // check if this actually deletes
     res.status(204).end(); // is end needed ???     
   } else {
-    res.status(204).send('File not found');
+    res.status(404).send('File not found');
   }
 
 });
@@ -121,10 +120,7 @@ const updatePresident = (index, data) => {
 const removePresident = (index) => {
   presidents.splice(index, 1); 
 }
-// const id = "44";
-// const index = getPresidentIndex(id);
-// removePresident(index);
-// console.log(presidents);
+
 
 
 

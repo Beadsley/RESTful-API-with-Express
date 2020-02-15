@@ -97,13 +97,13 @@ describe('The /presidents API', function () {
       
   });
 
-  it.only('-> delete -> get', async () => {
-    
+  it('-> delete -> get -> delete', async () => {
+
     const id = 43;
 
     await request(app).delete(`/api/presidents/${id}`).expect(204);
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
-          
+    await request(app).delete(`/api/presidents/${id}`).expect(404);
       
   });
 
