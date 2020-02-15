@@ -68,4 +68,26 @@ describe('The /presidents API', function () {
 
   });
 
+  it('create -> get -> delete -> get -> delete', async () => {
+
+    const pres = {
+      from: '2008',
+      to: '2020',
+      name: 'Charles Darwin'
+    }
+
+    const r1 = await request(app)
+      .post(`/api/presidents`)
+      .set('Content-Type', 'application/json')
+      .send(pres)
+      .expect(200);
+
+     const id = r1.body.id;
+
+    await request(app).get(`/api/carts/${id}`).expect(200);
+    await request(app).delete(`/api/carts/${id}`).expect(204);
+    await request(app).get(`/api/carts/${id}`).expect(404);
+    await request(app).delete(`/api/carts/${id}`).expect(204);
+  });
+
 });

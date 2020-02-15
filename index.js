@@ -34,8 +34,8 @@ app.get('/api/presidents', (req, res, next) => {
     res.json(presidents);
   }
   else {
-    // 400 bad requesta
-    res.status(400).send('wrong content type');
+    // 400 bad request ? ?
+    res.status(404).send('Not Found');
   }
 });
 // GET ONE
@@ -56,8 +56,8 @@ app.get('/api/presidents/:id', (req, res, next) => {
 
   }
   else {
-    // 400 bad request
-    res.status(400).send('Bad Request');
+    // 400 bad request ??
+    res.status(404).send('Not Found');
   }
 });
 
@@ -74,11 +74,16 @@ app.post('/api/presidents', (req, res, next) => {
     presidents.push(data);
     res.json(data);
   }
-  else {
+  else if (contentType !== 'application/json'){
     res.status(400).send('Wrong content type');
   }
-  
+  else {
+    // other status ????
+  }
+
 });
+
+
 
 module.exports.app = app;
 module.exports.db = () => presidents;
