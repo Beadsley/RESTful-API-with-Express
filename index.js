@@ -64,13 +64,20 @@ app.get('/api/presidents/:id', (req, res, next) => {
 // CREATE
 // validate data (is a number), contains right info. 
 // check if president already exists
-app.post('/api/presidents', (req, res, next) => {  
+app.post('/api/presidents', (req, res, next) => {
   let reqData = req.body;
-  const id = nextId(presidents).toString();
-  const data = Object.assign({ id }, reqData);
-  presidents.push(data);
-  res.json(data);
-
+  const contentType = req.headers['content-type'];
+  
+  if (contentType === 'application/json') {
+    const id = nextId(presidents).toString();
+    const data = Object.assign({ id }, reqData);
+    presidents.push(data);
+    res.json(data);
+  }
+  else {
+    res.status(400).send('Wrong content type');
+  }
+  
 });
 
 module.exports.app = app;
