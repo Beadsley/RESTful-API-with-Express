@@ -34,7 +34,7 @@ app.get('/api/presidents', (req, res, next) => {
     res.json(presidents);
   }
   else {
-    // 400 bad request
+    // 400 bad requesta
     res.status(400).send('wrong content type');
   }
 });
