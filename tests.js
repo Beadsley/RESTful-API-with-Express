@@ -164,8 +164,8 @@ describe('The /presidents API', function () {
 
     const id = '44'
 
-    const pres = {
-      id: id,
+    const pres = {  
+      id: 44444,    
       from: '2010',
       to: '2020',
       name: 'Barack Obama'
@@ -182,8 +182,15 @@ describe('The /presidents API', function () {
       .get(`/api/presidents/` + id)
       .set('Accept', 'application/json')
       .expect(200);
+
+      const expect = {
+        id: '44',
+        from: '2010',
+        to: '2020',
+        name: 'Barack Obama'
+      }
     
-      assert.deepEqual(r2.body, pres);
+      assert.deepEqual(r2.body, expect);
 
   });
 

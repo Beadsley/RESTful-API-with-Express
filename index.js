@@ -28,7 +28,6 @@ const nextId = (presidents) => {
   return Number.parseInt(highestId) + 1;
 };
 
-// GET ALL
 app.get('/api/presidents', (req, res) => {
 
   const contentType = req.headers['accept'];
@@ -41,7 +40,6 @@ app.get('/api/presidents', (req, res) => {
   }
 });
 
-// GET ONE
 app.get('/api/presidents/:id', (req, res) => {
 
   const contentType = req.headers['accept'];
@@ -61,10 +59,6 @@ app.get('/api/presidents/:id', (req, res) => {
   }
 });
 
-// CREATE
-// validate data (is a number), contains right info. 
-// validate date is not above the current date
-// check if president already exists
 app.post('/api/presidents', (req, res) => {
 
   const contentType = req.headers['content-type'];
@@ -82,12 +76,11 @@ app.post('/api/presidents', (req, res) => {
   }
 });
 
-//check when updating id
 app.put('/api/presidents/:id', (req, res) => {
 
   const contentType = req.headers['content-type'];
-  const reqData = req.body;
-  let data = validateData(reqData);
+  const reqData = req.body;  
+  let data = validateData(reqData);  
 
   if (contentType === 'application/json' && data) {
 
@@ -95,7 +88,7 @@ app.put('/api/presidents/:id', (req, res) => {
     const index = getPresidentIndex(id);
 
     if (index !== -1) {
-      data = Object.assign({ id }, data);
+      data = Object.assign({ id }, data);      
       updatePresident(index, data)
       res.status(200).send('File updated');
     } else {
@@ -106,7 +99,6 @@ app.put('/api/presidents/:id', (req, res) => {
     res.status(400).send('invalid request');
   }
 });
-
 
 app.delete('/api/presidents/:id', (req, res) => {
 
@@ -139,7 +131,7 @@ const removePresident = (index) => {
 
 const validateData = (data) => {
 
-  delete data.id;
+  delete data.id; //perhaps be deleted 
 
   const keys = Object.keys(data)
   
@@ -170,7 +162,7 @@ const validateData = (data) => {
   }
   return undefined
 } 
-// check to is larger than from 
+
 const validateYear = (year) => {
 
   const currentYear = new Date().getFullYear();
@@ -185,16 +177,6 @@ const validateYear = (year) => {
     return false;
   }
 }
-
-
-// const pres = {
-//   id:222,
-//   from: '2000',
-//   to: '2020',
-//   name: 'Charles Darwin',
-
-// }
-// console.log(validateData(pres));
 
 
 module.exports.app = app;
