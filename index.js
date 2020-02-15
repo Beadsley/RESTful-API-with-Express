@@ -131,8 +131,8 @@ const validateData = (data) => {
   const keys = Object.keys(data);
 
   if (keys.includes('from' && 'name') && keys.length === 2) {
-    const yearOK = validateYear(Number(data.from));
-    if (yearOK && typeof data.name === 'string') {
+    const yearValid = validateYear(Number(data.from));
+    if (yearValid && typeof data.name === 'string') {
       return {
         from: data.from,
         name: data.name
@@ -143,8 +143,8 @@ const validateData = (data) => {
     }
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to));
-    if (yearOK && typeof data.name === 'string') {
+    const yearValid = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to));
+    if (yearValid && typeof data.name === 'string') {
       return {
         from: data.from,
         to: data.to,
