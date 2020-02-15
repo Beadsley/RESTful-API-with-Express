@@ -134,20 +134,37 @@ const removePresident = (index) => {
 
 //check if name is a string 
 const validateData = (data) => {
-  const keys = Object.keys(data)   
+
+  const keys = Object.keys(data)
+
   if (keys.includes('from' && 'name') && keys.length === 2) {
-    return !isNaN(Number(data.from));
+    return validateYear(Number(data.from));
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    return !isNaN(Number(data.from)) && !isNaN(Number(data.to)) && (Number(data.to) <= new Date().getFullYear());
+    return validateYear(Number(data.from)) && validateYear(Number(data.to));
   }
   return false
 }
 
+const validateYear = (year) => {
+
+  const currentYear = new Date().getFullYear();
+
+  if (isNaN(year) === true) {
+    return false;
+  }
+  else if (year <= currentYear && year >= 1732) {
+    return true;
+  }
+  else {
+    return false;
+  }
+}
+
 
 const pres = {
-  from: '2008',
-  to: '2022',
+  from: '2000',
+  to: '2020',
   name: 'Charles Darwin',
 
 }
