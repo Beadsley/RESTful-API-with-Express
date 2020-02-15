@@ -13,7 +13,7 @@ describe('The /presidents API', function () {
 
   });
 
-  it('returns one president', async function () {
+  it('return one president', async function () {
     const pres = { id: '43', from: '2001', to: '2009', name: 'George W. Bush' };
     const resp = await request(app)
       .get('/api/presidents/43')
@@ -75,7 +75,7 @@ describe('The /presidents API', function () {
 
   });
 
-  it('create -> get -> delete -> get -> delete', async () => {
+  it('create -> get -> delete', async () => {
 
     const pres = {
       from: '2008',
@@ -89,13 +89,9 @@ describe('The /presidents API', function () {
       .send(pres)
       .expect(200);
 
-     const id = r1.body.id;
-     console.log(id);
-     
+     const id = r1.body.id;     
 
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(200);
-    await request(app).delete(`/api/presidents/${id}`).expect(204);
-    await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
     await request(app).delete(`/api/presidents/${id}`).expect(204);
   });
 

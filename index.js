@@ -80,12 +80,23 @@ app.post('/api/presidents', (req, res, next) => {
 
 
 app.delete('/api/presidents/:id', (req, res) => {
-console.log('here');
+  let id = req.params.id;
+  const index = getPresidentIndex(id);
+  if (index !== -1) {
+    presidents.splice(id, 1)
+    res.status(204).end(); // is end needed ??? 
+  } else {
+    res.status(204).send('File not found');
+  }
 
 });
 
 const getPresident = (id) => {
   return presidents.find(president => president.id === id)
+}
+
+const getPresidentIndex = (id) => {
+  return presidents.findIndex(president => president.id === id)
 }
 
 
