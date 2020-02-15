@@ -134,14 +134,14 @@ const removePresident = (index) => {
 
 const validateData = (data) => {
   const keys = Object.keys(data)
-  console.log(keys);
+  if (keys.includes('from' && 'name') && keys.length === 2) {
+    return !isNaN(Number(data.from));
+  }
+  else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
+    return !isNaN(Number(data.from)) && !isNaN(Number(data.to));
 
-
-  const keyNames = keys.includes('from' && 'name') && keys.length === 2;
-  const keyNames2 = keys.includes('from' && 'to' && 'name') && keys.length === 3;
-  console.log(2,keyNames);
-  console.log(3,keyNames2);
-  
+  }
+  return false
 }
 
 
@@ -151,7 +151,7 @@ const pres = {
   name: 'Charles Darwin',
 
 }
-validateData(pres);
+console.log(validateData(pres));
 
 
 
