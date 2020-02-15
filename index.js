@@ -29,22 +29,25 @@ const nextId = (presidents) => {
 };
 
 // GET ALL
-app.get('/api/presidents', (req, res, next) => {
-  if (req.headers['accept'] === 'application/json') {
+app.get('/api/presidents', (req, res) => {
+
+  const contentType = req.headers['accept'];
+  
+  if (contentType === 'application/json') {
     res.json(presidents);
   }
-  else if (req.headers['accept'] !== 'application/json') {
+  else {
     res.status(400).send('invalid request');
   }
-  else {
-    // 400 bad request ? ?
-    res.status(404).send('Not Found');
-  }
 });
+
 // GET ONE
-app.get('/api/presidents/:id', (req, res, next) => {
-  let id = req.params.id;
-  if (req.headers['accept'] === 'application/json') {
+app.get('/api/presidents/:id', (req, res) => {
+
+  const contentType = req.headers['accept'];
+  
+  if (contentType === 'application/json') {
+    const id = req.params.id;
     const president = getPresident(id);
     if (president) {
       res.json(president);
@@ -53,12 +56,8 @@ app.get('/api/presidents/:id', (req, res, next) => {
       res.status(404).send('Not Found');
     }
   }
-  else if (req.headers['accept'] !== 'application/json') {
-    res.status(400).send('invalid request');
-  }
   else {
-    // 400 bad request ??
-    res.status(404).send('Not Found');
+    res.status(400).send('invalid request');
   }
 });
 
@@ -71,7 +70,7 @@ app.post('/api/presidents', (req, res) => {
   const contentType = req.headers['content-type'];
 
   if (contentType === 'application/json') {
-    let reqData = req.body;
+    const reqData = req.body;
     const id = nextId(presidents).toString();
     const data = Object.assign({ id }, reqData);
     presidents.push(data);
@@ -80,7 +79,6 @@ app.post('/api/presidents', (req, res) => {
   else {
     res.status(400).send('invalid request');
   }
-
 });
 
 //check when updating id
@@ -89,8 +87,8 @@ app.put('/api/presidents/:id', (req, res) => {
   const contentType = req.headers['content-type'];
 
   if (contentType === 'application/json') {
-    let reqData = req.body;
-    let id = req.params.id;
+    const reqData = req.body;
+    const id = req.params.id;
     const index = getPresidentIndex(id);
     if (index !== -1) {
       updatePresident(index, reqData)
@@ -102,7 +100,6 @@ app.put('/api/presidents/:id', (req, res) => {
   else {
     res.status(400).send('invalid request');
   }
-
 });
 
 
@@ -113,11 +110,10 @@ app.delete('/api/presidents/:id', (req, res) => {
 
   if (index !== -1) {
     removePresident(index);
-    res.status(204).send('File removed'); 
+    res.status(204).send('File removed');
   } else {
     res.status(404).send('File not found');
   }
-
 });
 
 const getPresident = (id) => {
