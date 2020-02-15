@@ -79,6 +79,19 @@ app.post('/api/presidents', (req, res, next) => {
 
 });
 
+//check when updating id
+app.put('/api/presidents/:id', (req, res) => {
+  let id = req.params.id;
+  const index = getPresidentIndex(id);
+  if (index !== -1) {
+      console.log('found');
+      res.end();
+  } else {
+    res.status(204).send('File not found');
+  }
+
+});
+
 
 app.delete('/api/presidents/:id', (req, res) => {
   let id = req.params.id;

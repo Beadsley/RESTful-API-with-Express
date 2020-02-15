@@ -107,7 +107,7 @@ describe('The /presidents API', function () {
     }
 
     const r1 = await request(app)
-      .put(`/api/presidents`)
+      .put(`/api/presidents/`+id)
       .set('Content-Type', 'application/json')
       .send(pres)
       .expect(200);
