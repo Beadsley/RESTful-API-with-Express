@@ -134,8 +134,8 @@ const validateData = (data) => {
     const yearValid = validateYear(Number(data.from));
     if (yearValid && typeof data.name === 'string') {
       return {
-        from: data.from,
-        name: data.name
+        from: data.from.toString(),
+        name: data.name.toString()
       };
     }
     else {
@@ -146,8 +146,8 @@ const validateData = (data) => {
     const yearValid = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to));
     if (yearValid && typeof data.name === 'string') {
       return {
-        from: data.from,
-        to: data.to,
+        from: data.from.toString(),
+        to: data.to.toString(),
         name: data.name
       };
     }
