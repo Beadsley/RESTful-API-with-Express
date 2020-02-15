@@ -75,7 +75,7 @@ describe('The /presidents API', function () {
 
   });
 
-  it('create -> get -> delete', async () => {
+  it.only('create -> get -> delete', async () => {
 
     const pres = {
       from: '2008',

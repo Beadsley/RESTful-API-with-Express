@@ -81,6 +81,7 @@ app.post('/api/presidents', (req, res, next) => {
 
 //check when updating id
 app.put('/api/presidents/:id', (req, res) => {
+  let reqData = req.body;
   let id = req.params.id;
   const index = getPresidentIndex(id);
   if (index !== -1) {
@@ -97,8 +98,8 @@ app.delete('/api/presidents/:id', (req, res) => {
   let id = req.params.id;
   const index = getPresidentIndex(id);
   if (index !== -1) {
-    presidents.splice(id, 1)
-    res.status(204).end(); // is end needed ??? 
+    presidents.splice(index, 1); // check if this actually deletes
+    res.status(204).end(); // is end needed ???     
   } else {
     res.status(204).send('File not found');
   }
@@ -113,6 +114,9 @@ const getPresidentIndex = (id) => {
   return presidents.findIndex(president => president.id === id)
 }
 
+const updatePresident = (index, data) => {
+  presidents.splice(index, 1, data);
+}
 
 
 module.exports.app = app;
