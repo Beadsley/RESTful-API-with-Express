@@ -24,6 +24,13 @@ describe('The /presidents API', function () {
 
   });
 
+  it('expect president not found', async function () {
+    await request(app)
+      .get('/api/presidents/1')
+      .set('Accept', 'application/json')
+      .expect(404);
+  });
+
   it('create new president', async () => {
 
     const pres = {
