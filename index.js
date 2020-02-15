@@ -67,14 +67,14 @@ app.get('/api/presidents/:id', (req, res, next) => {
 app.post('/api/presidents', (req, res, next) => {
   let reqData = req.body;
   const contentType = req.headers['content-type'];
-  
+
   if (contentType === 'application/json') {
     const id = nextId(presidents).toString();
     const data = Object.assign({ id }, reqData);
     presidents.push(data);
     res.json(data);
   }
-  else if (contentType !== 'application/json'){
+  else if (contentType !== 'application/json') {
     res.status(400).send('Wrong content type');
   }
   else {
@@ -82,6 +82,10 @@ app.post('/api/presidents', (req, res, next) => {
   }
 
 });
+
+const getPresident = (id) => {
+  return presidents.find(president=>president.id===id)
+}
 
 
 
