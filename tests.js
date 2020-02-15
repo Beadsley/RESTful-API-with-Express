@@ -73,6 +73,21 @@ describe('The /presidents API', function () {
     assert.deepEqual(r2.body, expected);
 
   });
+  it('create new president with false data', async () => {
+
+    const pres = {
+      from: 'sdffds',
+      to: '2019',
+      name: 'Charles Darwin'
+    }
+
+    const r1 = await request(app)
+      .post(`/api/presidents`)
+      .set('Content-Type', 'application/json')
+      .send(pres)
+      .expect(400);
+
+  });
 
   it('reject POST and PUT due to wrong content type', async () => {
 

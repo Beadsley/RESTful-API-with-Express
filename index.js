@@ -68,9 +68,10 @@ app.get('/api/presidents/:id', (req, res) => {
 app.post('/api/presidents', (req, res) => {
 
   const contentType = req.headers['content-type'];
+  const reqData = req.body;
+  const dataOK = validateData(reqData)
 
-  if (contentType === 'application/json') {
-    const reqData = req.body;
+  if (contentType === 'application/json' && dataOK) {
     const id = nextId(presidents).toString();
     const data = Object.assign({ id }, reqData);
     presidents.push(data);
@@ -162,13 +163,13 @@ const validateYear = (year) => {
 }
 
 
-const pres = {
-  from: '2000',
-  to: '2020',
-  name: 'Charles Darwin',
+// const pres = {
+//   from: '2000',
+//   to: '2020',
+//   name: 'Charles Darwin',
 
-}
-console.log(validateData(pres));
+// }
+// console.log(validateData(pres));
 
 
 module.exports.app = app;
