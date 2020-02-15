@@ -90,11 +90,13 @@ describe('The /presidents API', function () {
       .expect(200);
 
      const id = r1.body.id;
+     console.log(id);
+     
 
-    await request(app).get(`/api/carts/${id}`).expect(200);
-    await request(app).delete(`/api/carts/${id}`).expect(204);
-    await request(app).get(`/api/carts/${id}`).expect(404);
-    await request(app).delete(`/api/carts/${id}`).expect(204);
+    await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(200);
+    await request(app).delete(`/api/presidents/${id}`).expect(204);
+    await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
+    await request(app).delete(`/api/presidents/${id}`).expect(204);
   });
 
 });

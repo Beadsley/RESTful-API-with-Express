@@ -78,6 +78,12 @@ app.post('/api/presidents', (req, res, next) => {
 
 });
 
+
+app.delete('/api/presidents/:id', (req, res) => {
+console.log('here');
+
+});
+
 const getPresident = (id) => {
   return presidents.find(president => president.id === id)
 }
