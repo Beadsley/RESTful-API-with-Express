@@ -30,20 +30,19 @@ describe('The /presidents API', function () {
       .set('Accept', 'application/json')
       .expect(404);
 
-      const id = '1'
+    const id = '1'
 
-      const pres = {
-        id: id,
-        from: '1990',
-        to: '2000',
-        name: 'Barack Obama'
-      }
-  
-      const r1 = await request(app)
-        .put(`/api/presidents/`+id)
-        .set('Content-Type', 'application/json')
-        .send(pres)
-        .expect(204);
+    const pres = {
+      from: '1990',
+      to: '2000',
+      name: 'Barack Obama'
+    }
+
+    const r1 = await request(app)
+      .put(`/api/presidents/` + id)
+      .set('Content-Type', 'application/json')
+      .send(pres)
+      .expect(204);
   });
 
   it('create new president', async () => {
@@ -70,16 +69,16 @@ describe('The /presidents API', function () {
       .expect(200);
 
     const expected = Object.assign({ id }, pres);
-    
+
     assert.deepEqual(r2.body, expected);
 
   });
-  it('create new president with false data', async () => {
+  it('shoudlnt create new president with false data', async () => {
 
     const pres = {
-      from: 'sdffds',
-      to: '2019',
-      name: 'Charles Darwin'
+      from: '2009',
+      to: '2017',
+      name: 'Barack Obama'
     }
 
     const r1 = await request(app)
@@ -100,7 +99,7 @@ describe('The /presidents API', function () {
     }
 
     const r1 = await request(app)
-      .put(`/api/presidents/`+45)
+      .put(`/api/presidents/` + 45)
       .set('Content-Type', 'application/json')
       .send(pres)
       .expect(400);
@@ -133,7 +132,7 @@ describe('The /presidents API', function () {
     const pres = {
       from: '2008',
       to: '2020',
-      name: 'Charles Darwin'
+      name: 'Charles D'
     }
 
     const r1 = await request(app)
@@ -142,12 +141,12 @@ describe('The /presidents API', function () {
       .send(pres)
       .expect(201);
 
-    const id = r1.body.id;    
+    const id = r1.body.id;
 
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(200);
     await request(app).delete(`/api/presidents/${id}`).expect(204);
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
-      
+
   });
 
   it('-> delete -> get -> delete', async () => {
@@ -157,22 +156,21 @@ describe('The /presidents API', function () {
     await request(app).delete(`/api/presidents/${id}`).expect(204);
     await request(app).get(`/api/presidents/${id}`).set('Accept', 'application/json').expect(404);
     await request(app).delete(`/api/presidents/${id}`).expect(404);
-      
+
   });
 
   it('should update based on id', async () => {
 
     const id = '44'
 
-    const pres = {  
-      id: 44444,    
+    const pres = {
       from: '2010',
       to: '2020',
       name: 'Barack Obama'
     }
 
     const r1 = await request(app)
-      .put(`/api/presidents/`+id)
+      .put(`/api/presidents/` + id)
       .set('Content-Type', 'application/json')
       .send(pres)
       .expect(200);
@@ -183,14 +181,14 @@ describe('The /presidents API', function () {
       .set('Accept', 'application/json')
       .expect(200);
 
-      const expect = {
-        id: '44',
-        from: '2010',
-        to: '2020',
-        name: 'Barack Obama'
-      }
-    
-      assert.deepEqual(r2.body, expect);
+    const expect = {
+      id: '44',
+      from: '2010',
+      to: '2020',
+      name: 'Barack Obama'
+    }
+
+    assert.deepEqual(r2.body, expect);
 
   });
 

@@ -64,8 +64,9 @@ app.post('/api/presidents', (req, res) => {
   const contentType = req.headers['content-type'];
   const reqData = req.body;
   let data = validateData(reqData)
+  const exists = presidentExists(reqData.name);
 
-  if (contentType === 'application/json' && data) {
+  if (contentType === 'application/json' && data && !exists) {
     const id = nextId(presidents).toString();
     data = Object.assign({ id }, data);
     presidents.push(data);
@@ -79,8 +80,8 @@ app.post('/api/presidents', (req, res) => {
 app.put('/api/presidents/:id', (req, res) => {
 
   const contentType = req.headers['content-type'];
-  const reqData = req.body;  
-  let data = validateData(reqData);  
+  const reqData = req.body;
+  let data = validateData(reqData);
 
   if (contentType === 'application/json' && data) {
 
@@ -88,7 +89,7 @@ app.put('/api/presidents/:id', (req, res) => {
     const index = getPresidentIndex(id);
 
     if (index !== -1) {
-      data = Object.assign({ id }, data);      
+      data = Object.assign({ id }, data);
       updatePresident(index, data)
       res.status(200).send('File updated');
     } else {
@@ -114,11 +115,15 @@ app.delete('/api/presidents/:id', (req, res) => {
 });
 
 const getPresident = (id) => {
-  return presidents.find(president => president.id === id)
+  return presidents.find(president => president.id === id);
 }
 
 const getPresidentIndex = (id) => {
-  return presidents.findIndex(president => president.id === id)
+  return presidents.findIndex(president => president.id === id);
+}
+
+const presidentExists = (name) => {
+  return presidents.some(president => president.name == name);
 }
 
 const updatePresident = (index, data) => {
@@ -131,10 +136,9 @@ const removePresident = (index) => {
 
 const validateData = (data) => {
 
-  delete data.id; //perhaps be deleted 
 
   const keys = Object.keys(data)
-  
+
   if (keys.includes('from' && 'name') && keys.length === 2) {
     const yearOK = validateYear(Number(data.from));
     if (yearOK && typeof data.name === 'string') {
@@ -148,7 +152,7 @@ const validateData = (data) => {
     }
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to)) ;
+    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to));
     if (yearOK && typeof data.name === 'string') {
       return {
         from: data.from,
@@ -161,7 +165,7 @@ const validateData = (data) => {
     }
   }
   return undefined
-} 
+}
 
 const validateYear = (year) => {
 
@@ -177,7 +181,6 @@ const validateYear = (year) => {
     return false;
   }
 }
-
 
 module.exports.app = app;
 module.exports.db = () => presidents;
