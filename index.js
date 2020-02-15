@@ -84,10 +84,8 @@ app.put('/api/presidents/:id', (req, res) => {
   let data = validateData(reqData);
 
   if (contentType === 'application/json' && data) {
-
     const id = req.params.id;
     const index = getPresidentIndex(id);
-
     if (index !== -1) {
       data = Object.assign({ id }, data);
       updatePresident(index, data);
