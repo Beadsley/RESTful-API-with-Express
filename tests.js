@@ -90,6 +90,22 @@ describe('The /presidents API', function () {
 
   });
 
+
+  it('shouldnt update with false data', async () => {
+
+    const pres = {
+      from: '2020',
+      to: '2010',
+      name: 'Charles Darwin'
+    }
+
+    const r1 = await request(app)
+      .put(`/api/presidents/`+45)
+      .set('Content-Type', 'application/json')
+      .send(pres)
+      .expect(400);
+
+  });
   it('reject POST and PUT due to wrong content type', async () => {
 
     const pres = {

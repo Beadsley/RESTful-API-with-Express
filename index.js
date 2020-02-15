@@ -88,7 +88,7 @@ app.put('/api/presidents/:id', (req, res) => {
   const contentType = req.headers['content-type'];
   const reqData = req.body;
   let data = validateData(reqData);
-  
+
   if (contentType === 'application/json' && data) {
 
     const id = req.params.id;
@@ -142,7 +142,7 @@ const validateData = (data) => {
   delete data.id;
 
   const keys = Object.keys(data)
-
+  
   if (keys.includes('from' && 'name') && keys.length === 2) {
     const yearOK = validateYear(Number(data.from));
     if (yearOK && typeof data.name === 'string') {
@@ -156,7 +156,7 @@ const validateData = (data) => {
     }
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to));
+    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to)) ;
     if (yearOK && typeof data.name === 'string') {
       return {
         from: data.from,
@@ -169,7 +169,7 @@ const validateData = (data) => {
     }
   }
   return undefined
-}
+} 
 // check to is larger than from 
 const validateYear = (year) => {
 
