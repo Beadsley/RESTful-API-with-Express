@@ -132,14 +132,14 @@ const removePresident = (index) => {
   presidents.splice(index, 1);
 }
 
+//check if name is a string 
 const validateData = (data) => {
-  const keys = Object.keys(data)
+  const keys = Object.keys(data)   
   if (keys.includes('from' && 'name') && keys.length === 2) {
     return !isNaN(Number(data.from));
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    return !isNaN(Number(data.from)) && !isNaN(Number(data.to));
-
+    return !isNaN(Number(data.from)) && !isNaN(Number(data.to)) && (Number(data.to) <= new Date().getFullYear());
   }
   return false
 }
@@ -147,12 +147,11 @@ const validateData = (data) => {
 
 const pres = {
   from: '2008',
-  to: '2020',
+  to: '2022',
   name: 'Charles Darwin',
 
 }
 console.log(validateData(pres));
-
 
 
 module.exports.app = app;
