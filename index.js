@@ -86,13 +86,17 @@ app.post('/api/presidents', (req, res) => {
 app.put('/api/presidents/:id', (req, res) => {
 
   const contentType = req.headers['content-type'];
+  const reqData = req.body;
+  let data = validateData(reqData);
+  
+  if (contentType === 'application/json' && data) {
 
-  if (contentType === 'application/json') {
-    const reqData = req.body;
     const id = req.params.id;
     const index = getPresidentIndex(id);
+
     if (index !== -1) {
-      updatePresident(index, reqData)
+      data = Object.assign({ id }, data);
+      updatePresident(index, data)
       res.status(200).send('File updated');
     } else {
       res.status(204).send('File not found');
@@ -133,8 +137,9 @@ const removePresident = (index) => {
   presidents.splice(index, 1);
 }
 
-//check if name is a string 
 const validateData = (data) => {
+
+  delete data.id;
 
   const keys = Object.keys(data)
 
@@ -165,7 +170,7 @@ const validateData = (data) => {
   }
   return undefined
 }
-
+// check to is larger than from 
 const validateYear = (year) => {
 
   const currentYear = new Date().getFullYear();
@@ -183,6 +188,7 @@ const validateYear = (year) => {
 
 
 // const pres = {
+//   id:222,
 //   from: '2000',
 //   to: '2020',
 //   name: 'Charles Darwin',
