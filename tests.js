@@ -70,7 +70,6 @@ describe('The /presidents API', function () {
       .expect(200);
 
     const expected = Object.assign({ id }, pres);
-    console.log(r2.body);
     
     assert.deepEqual(r2.body, expected);
 

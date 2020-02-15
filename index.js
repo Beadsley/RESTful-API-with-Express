@@ -73,7 +73,7 @@ app.post('/api/presidents', (req, res) => {
 
   if (contentType === 'application/json' && data) {
     const id = nextId(presidents).toString();
-    data = Object.assign({ id }, data);    
+    data = Object.assign({ id }, data);
     presidents.push(data);
     res.status(201).json(data);
   }
@@ -139,8 +139,8 @@ const validateData = (data) => {
   const keys = Object.keys(data)
 
   if (keys.includes('from' && 'name') && keys.length === 2) {
-    const yearOK =validateYear(Number(data.from));
-    if (yearOK){
+    const yearOK = validateYear(Number(data.from));
+    if (yearOK && typeof data.name === 'string') {
       return {
         from: data.from,
         name: data.name
@@ -151,8 +151,8 @@ const validateData = (data) => {
     }
   }
   else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    const yearOK =validateYear(Number(data.from)) && validateYear(Number(data.to));
-    if (yearOK){
+    const yearOK = validateYear(Number(data.from)) && validateYear(Number(data.to));
+    if (yearOK && typeof data.name === 'string') {
       return {
         from: data.from,
         to: data.to,
