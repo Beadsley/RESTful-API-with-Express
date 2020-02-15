@@ -34,6 +34,7 @@ app.get('/api/presidents', (req, res, next) => {
     res.json(presidents);
   }
   else {
+    // 400 bad request
     res.status(400).send('wrong content type');
   }
 });
@@ -49,11 +50,13 @@ app.get('/api/presidents/:id', (req, res, next) => {
         }
     });
     if (!exists){
-      res.send('Doesnt exist');
+      // 404 not found
+      res.status(404).send('Doesnt exist');
     }
     
   }
   else {
+    // 400 bad request
     res.status(400).send('wrong content type');
   }
 });
