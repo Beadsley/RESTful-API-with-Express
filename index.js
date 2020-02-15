@@ -167,7 +167,7 @@ const validateYear = (year) => {
   if (isNaN(year) === true) {
     return false;
   }
-  else if (year <= currentYear && year >= 1732) {
+  else if (year <= currentYear && year >= 1781) {
     return true;
   }
   else {
