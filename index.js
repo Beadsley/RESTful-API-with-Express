@@ -63,7 +63,7 @@ app.post('/api/presidents', (req, res) => {
 
   const contentType = req.headers['content-type'];
   const reqData = req.body;
-  let data = validateData(reqData)
+  let data = validateData(reqData);
   const exists = presidentExists(reqData.name);
 
   if (contentType === 'application/json' && data && !exists) {
@@ -90,7 +90,7 @@ app.put('/api/presidents/:id', (req, res) => {
 
     if (index !== -1) {
       data = Object.assign({ id }, data);
-      updatePresident(index, data)
+      updatePresident(index, data);
       res.status(200).send('File updated');
     } else {
       res.status(204).send('File not found');
@@ -122,15 +122,15 @@ const presidentExists = (name) => presidents.some(president => president.name ==
 
 const updatePresident = (index, data) => {
   presidents.splice(index, 1, data);
-}
+};
 
 const removePresident = (index) => {
   presidents.splice(index, 1);
-}
+};
 
 const validateData = (data) => {
 
-  const keys = Object.keys(data)
+  const keys = Object.keys(data);
 
   if (keys.includes('from' && 'name') && keys.length === 2) {
     const yearOK = validateYear(Number(data.from));
@@ -138,7 +138,7 @@ const validateData = (data) => {
       return {
         from: data.from,
         name: data.name
-      }
+      };
     }
     else {
       return undefined;
@@ -151,14 +151,14 @@ const validateData = (data) => {
         from: data.from,
         to: data.to,
         name: data.name
-      }
+      };
     }
     else {
       return undefined;
     }
   }
-  return undefined
-}
+  return undefined;
+};
 
 const validateYear = (year) => {
 
@@ -173,7 +173,7 @@ const validateYear = (year) => {
   else {
     return false;
   }
-}
+};
 
 module.exports.app = app;
 module.exports.db = () => presidents;
