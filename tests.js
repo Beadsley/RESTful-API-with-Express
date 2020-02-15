@@ -27,25 +27,28 @@ describe('The /presidents API', function () {
   it('create new president', async () => {
 
     const pres = {
-      from: '2009',
-      to: '2017',
-      name: 'Barack Obama'
+      from: '2008',
+      to: '2020',
+      name: 'Charles Darwin'
     }
 
     const r1 = await request(app)
       .post(`/api/presidents`)
       .set('Content-Type', 'application/json')
       .send(pres)
-      .expect(204);
-
-      console.log(r1.text);
-      
-
-    const r2 = await request(server)
-      .get(`//api/presidents`)
       .expect(200);
 
-    console.log(r2.text);
+     const id = r1.body.id;
+      
+
+    const r2 = await request(app)
+      .get(`/api/presidents/`+id)
+      .set('Accept', 'application/json')
+      .expect(200);
+
+      const expected = Object.assign({ id }, pres);
+      
+      assert.deepEqual(r2.body, expected);
 
   });
 });

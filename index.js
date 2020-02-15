@@ -28,7 +28,7 @@ const nextId = (presidents) => {
   return Number.parseInt(highestId) + 1;
 };
 
-// YOUR ENDPOINTS HERE
+// GET ALL
 app.get('/api/presidents', (req, res, next) => {
   if (req.headers['accept'] === 'application/json') {
     res.json(presidents);
@@ -38,30 +38,40 @@ app.get('/api/presidents', (req, res, next) => {
     res.status(400).send('wrong content type');
   }
 });
-
+// GET ONE
 app.get('/api/presidents/:id', (req, res, next) => {
   let id = req.params.id;
   let exists = false;
-  if (req.headers['accept'] === 'application/json') { 
+  if (req.headers['accept'] === 'application/json') {
     presidents.forEach(president => {
-        if (president.id === id){
-          exists = true;
-          res.json(president);
-        }
+      if (president.id === id) {
+        exists = true;
+        res.json(president);
+      }
     });
-    if (!exists){
+    if (!exists) {
       // 404 not found
-      res.status(404).send('Doesnt exist');
+      res.status(404).send('Not Found');
     }
-    
+
   }
   else {
     // 400 bad request
-    res.status(400).send('wrong content type');
+    res.status(400).send('Bad Request');
   }
 });
 
+// CREATE
+// validate data (is a number), contains right info. 
+// check if president already exists
+app.post('/api/presidents', (req, res, next) => {  
+  let reqData = req.body;
+  const id = nextId(presidents).toString();
+  const data = Object.assign({ id }, reqData);
+  presidents.push(data);
+  res.json(data);
 
+});
 
 module.exports.app = app;
 module.exports.db = () => presidents;
