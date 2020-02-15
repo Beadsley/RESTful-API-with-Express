@@ -85,12 +85,11 @@ app.put('/api/presidents/:id', (req, res) => {
   let id = req.params.id;
   const index = getPresidentIndex(id);
   if (index !== -1) {
-      console.log('found');
+      updatePresident(index, reqData)
       res.end();
   } else {
     res.status(204).send('File not found');
   }
-
 });
 
 
