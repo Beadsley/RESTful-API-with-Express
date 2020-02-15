@@ -32,7 +32,7 @@ const nextId = (presidents) => {
 app.get('/api/presidents', (req, res) => {
 
   const contentType = req.headers['accept'];
-  
+
   if (contentType === 'application/json') {
     res.json(presidents);
   }
@@ -45,7 +45,7 @@ app.get('/api/presidents', (req, res) => {
 app.get('/api/presidents/:id', (req, res) => {
 
   const contentType = req.headers['accept'];
-  
+
   if (contentType === 'application/json') {
     const id = req.params.id;
     const president = getPresident(id);
@@ -132,6 +132,26 @@ const removePresident = (index) => {
   presidents.splice(index, 1);
 }
 
+const validateData = (data) => {
+  const keys = Object.keys(data)
+  console.log(keys);
+
+
+  const keyNames = keys.includes('from' && 'name') && keys.length === 2;
+  const keyNames2 = keys.includes('from' && 'to' && 'name') && keys.length === 3;
+  console.log(2,keyNames);
+  console.log(3,keyNames2);
+  
+}
+
+
+const pres = {
+  from: '2008',
+  to: '2020',
+  name: 'Charles Darwin',
+
+}
+validateData(pres);
 
 
 
