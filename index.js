@@ -116,7 +116,7 @@ const getPresident = (id) => presidents.find(president => president.id === id);
 
 const getPresidentIndex = (id) => presidents.findIndex(president => president.id === id);
 
-const presidentExists = (name) => presidents.some(president => president.name == name);
+const presidentExists = (name) => presidents.some(president => president.name === name);
 
 const updatePresident = (index, data) => {
   presidents.splice(index, 1, data);
