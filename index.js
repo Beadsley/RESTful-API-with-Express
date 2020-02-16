@@ -160,12 +160,13 @@ const validateData = (data) => {
 
 const validateYear = (year) => {
 
+  const firstPresident = 1789;
   const currentYear = new Date().getFullYear();
 
   if (isNaN(year) === true) {
     return false;
   }
-  else if (year <= currentYear && year >= 1781) {
+  else if (year <= currentYear && year >= firstPresident) {
     return true;
   }
   else {
