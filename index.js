@@ -36,7 +36,7 @@ app.get('/api/presidents', (req, res) => {
     res.json(presidents);
   }
   else {
-    res.status(400).send('invalid request');
+    res.status(400).send('Invalid request');
   }
 });
 
@@ -55,7 +55,7 @@ app.get('/api/presidents/:id', (req, res) => {
     }
   }
   else {
-    res.status(400).send('invalid request');
+    res.status(400).send('Invalid request');
   }
 });
 
@@ -73,7 +73,7 @@ app.post('/api/presidents', (req, res) => {
     res.status(201).json(data);
   }
   else {
-    res.status(400).send('invalid request');
+    res.status(400).send('Invalid request');
   }
 });
 
@@ -87,15 +87,23 @@ app.put('/api/presidents/:id', (req, res) => {
     const id = req.params.id;
     const index = getPresidentIndex(id);
     if (index !== -1) {
-      data = Object.assign({ id }, data);
-      updatePresident(index, data);
-      res.status(200).send('File updated');
+      const oldname = getPresident(id).name;
+      const newName = reqData.name;
+      const exists = presidentExists(newName);
+      if (exists && oldname !== newName) {
+        res.status(400).send('President already exists');
+      }
+      else {
+        data = Object.assign({ id }, data);
+        updatePresident(index, data);
+        res.status(200).send('File updated');
+      }
     } else {
       res.status(204).send('File not found');
     }
   }
   else {
-    res.status(400).send('invalid request');
+    res.status(400).send('Invalid request');
   }
 });
 
