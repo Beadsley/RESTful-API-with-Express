@@ -17,41 +17,27 @@ client.connect(function (err) {
 
     const db = client.db(dbName);
 
-    // insertDocuments(db, function () {
-    //     indexCollection(db, function () {
-    //         findDocuments(db, () => {
-    //             client.close();
-    //         })
-    //     });
-    // });
+    insertDocuments(db, { id: "dan" })
+    findDocuments(db, (files) => { console.log(files) });
+    //client.close()
 
-
-    removeDocument(db, () => { 
-        client.close();
-    })
-
-    findDocuments(db, function (x) {
-        console.log('x', x);
-
-        client.close();
-    });
-
+    // removeDocument(db, () => { client.close() });
 
 });
 
-const insertDocuments = function (db, callback) {
+const insertDocuments = function (db, obj, callback) {
     // Get the documents collection
     const collection = db.collection('documents');
     // Insert some documents
-    collection.insertMany([
-        { a: 1 }, { a: 2 }, { a: 3 }
-    ], function (err, result) {
-        assert.equal(err, null);
-        assert.equal(3, result.result.n);
-        assert.equal(3, result.ops.length);
-        console.log("Inserted 3 documents into the collection");
-        callback(result);
-    });
+    collection.insertOne(
+        obj
+        , function (err, result) {
+            assert.equal(err, null);
+            assert.equal(1, result.result.n);
+            assert.equal(1, result.ops.length);
+            console.log("Inserted document into the collection");
+            //callback(result);
+        });
 }
 
 const findDocuments = function (db, callback) {
