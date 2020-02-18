@@ -154,9 +154,7 @@ const getPresident = (id) => presidents.find(president => president.id === id);
 
 const getPresidentIndex = async(id) => 
 {
-  const presidents = await dbHelper.getDocuments(db);
-  console.log(typeof presidents[0]._id, presidents[0]._id);
-  
+  const presidents = await dbHelper.getDocuments(db);  
   return presidents.findIndex(president => president._id.toString() == id);
 }
 
