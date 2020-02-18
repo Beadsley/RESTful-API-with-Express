@@ -1,39 +1,76 @@
 const app = require('express')();
-let presidents = [
-  {
-    id: '43',
-    from: '2001',
-    to: '2009',
-    name: 'George W. Bush'
-  },
-  {
-    id: '44',
-    from: '2009',
-    to: '2017',
-    name: 'Barack Obama'
-  },
-  {
-    id: '45',
-    from: '2017',
-    name: 'Donald Trump'
-  }
-];
-
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 const bodyParser = require('body-parser');
+
+const url = 'mongodb://localhost:27017';
+const dbName = 'presidents';
+const client = new MongoClient(url, { useUnifiedTopology: true });
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+let db;
 
 const nextId = (presidents) => {
   const highestId = presidents.reduce((a, c) => c.id > a ? c.id : a, 0);
   return Number.parseInt(highestId) + 1;
 };
 
+
+/**
+ * mongod, and mongo to connect to the mongo server
+ */
+app.listen(3000, () => {
+  client.connect(function (err) {
+    if (err) {
+      console.log(err.message);
+      throw err;
+    }
+    else {
+      console.log("listenening on port 3000");
+      db = client.db(dbName);
+      insertDocuments({id: "Beadsley"})      
+    }
+  });
+});
+
+const insertDocuments = function (obj) {
+  // Get the documents collection
+  const collection = db.collection('documents');
+  // Insert some documents
+  collection.insertOne(
+      obj
+      , function (err, result) {
+          assert.equal(err, null);
+          assert.equal(1, result.result.n);
+          assert.equal(1, result.ops.length);
+          console.log("Inserted document into the collection");        
+      });
+}
+
+// TODO use promises instead of callbacks
+const findDocuments = function (callback) {
+  // Get the documents collection
+  const collection = db.collection('documents');
+  // Find some documents
+  collection.find({}).toArray(function (err, docs) {
+      assert.equal(err, null);
+      console.log("Found the following records");
+      console.log(docs.length)
+      callback(docs);
+  });
+}
+
+
 app.get('/api/presidents', (req, res) => {
 
   const contentType = req.headers['accept'];
 
   if (contentType === 'application/json') {
-    res.json(presidents);
+    findDocuments(presidents=>{
+      res.json(presidents);
+    })    
   }
   else {
     res.status(400).send('Invalid request');
