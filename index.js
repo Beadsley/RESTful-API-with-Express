@@ -11,33 +11,12 @@ const client = new MongoClient(url, { useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// let presidents = [
-//   {
-//     id: '43',
-//     from: '2001',
-//     to: '2009',
-//     name: 'George W. Bush'
-//   },
-//   {
-//     id: '44',
-//     from: '2009',
-//     to: '2017',
-//     name: 'Barack Obama'
-//   },
-//   {
-//     id: '45',
-//     from: '2017',
-//     name: 'Donald Trump'
-//   }
-// ];
-
 let db;
 
 const nextId = (presidents) => {
   const highestId = presidents.reduce((a, c) => c.id > a ? c.id : a, 0);
   return Number.parseInt(highestId) + 1;
 };
-
 
 /**
  * mongod, and mongo to connect to the mongo server
@@ -122,9 +101,7 @@ app.put('/api/presidents/:id', async (req, res) => {
       if (exists && oldname !== newName) {
         res.status(400).send('President already exists');
       }
-      else {
-        console.log(id, data);
-        
+      else {        
         updatePresident(id, data);
         res.status(200).send('File updated');
       }
@@ -167,12 +144,8 @@ const presidentExists = async (name) => {
 
 }
 
-const updatePresident = (id, data) => {
-  
-  dbHelper.updateDocument(db, id, data, results=>{
-    console.log('RESULLTS: ',results);    
-  })
-  //presidents.splice(index, 1, data);
+const updatePresident = async (id, data) => {  
+  await dbHelper.updateDocument(db, id, data);
 };
 
 
