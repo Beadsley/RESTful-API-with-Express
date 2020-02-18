@@ -10,6 +10,26 @@ const client = new MongoClient(url, { useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+let presidents = [
+  {
+    id: '43',
+    from: '2001',
+    to: '2009',
+    name: 'George W. Bush'
+  },
+  {
+    id: '44',
+    from: '2009',
+    to: '2017',
+    name: 'Barack Obama'
+  },
+  {
+    id: '45',
+    from: '2017',
+    name: 'Donald Trump'
+  }
+];
+
 let db;
 
 const nextId = (presidents) => {
@@ -30,7 +50,9 @@ app.listen(3000, () => {
     else {
       console.log("listenening on port 3000");
       db = client.db(dbName);
-      insertDocuments({id: "Beadsley"})      
+
+       //removeDocument(db, () => { client.close() });
+       
     }
   });
 });
@@ -59,6 +81,18 @@ const findDocuments = function (callback) {
       console.log("Found the following records");
       console.log(docs.length)
       callback(docs);
+  });
+}
+
+
+const removeDocument = function (db, callback) {
+  // Get the documents collection
+  const collection = db.collection('documents');
+  // Delete document where a is 3
+  collection.deleteMany({}, function (err, result) {
+      assert.equal(err, null);
+      console.log("Removed everything");
+      callback(result);
   });
 }
 
@@ -106,7 +140,7 @@ app.post('/api/presidents', (req, res) => {
   if (contentType === 'application/json' && data && !exists) {
     const id = nextId(presidents).toString();
     data = Object.assign({ id }, data);
-    presidents.push(data);
+    insertDocuments(data);    
     res.status(201).json(data);
   }
   else {
