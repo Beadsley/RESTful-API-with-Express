@@ -96,7 +96,7 @@ app.post('/api/presidents', async (req, res) => {
   const reqData = req.body;
   let data = validateData(reqData);
   const exists = await presidentExists(reqData.name);
-  
+
   if (contentType === 'application/json' && data && !exists) {
     dbHelper.insertDocuments(db, data);
     res.status(201).json(data);
@@ -106,7 +106,7 @@ app.post('/api/presidents', async (req, res) => {
   }
 });
 
-app.put('/api/presidents/:id', (req, res) => {
+app.put('/api/presidents/:id', async (req, res) => {
 
   const contentType = req.headers['content-type'];
   const reqData = req.body;
@@ -114,17 +114,18 @@ app.put('/api/presidents/:id', (req, res) => {
 
   if (contentType === 'application/json' && data) {
     const id = req.params.id;
-    const index = getPresidentIndex(id);
+    const index = await getPresidentIndex(id);
     if (index !== -1) {
-      const oldname = getPresident(id).name;
+      const oldname = await getPresident(id).name;
       const newName = reqData.name;
-      const exists = presidentExists(newName);
+      const exists = await presidentExists(newName);
       if (exists && oldname !== newName) {
         res.status(400).send('President already exists');
       }
       else {
-        data = Object.assign({ id }, data);
-        updatePresident(index, data);
+        console.log(id, data);
+        
+        updatePresident(id, data);
         res.status(200).send('File updated');
       }
     } else {
@@ -166,9 +167,12 @@ const presidentExists = async (name) => {
 
 }
 
-const updatePresident = async (index, data) => {
-  const presidents = await dbHelper.getDocuments(db);
-  presidents.splice(index, 1, data);
+const updatePresident = (id, data) => {
+  
+  dbHelper.updateDocument(db, id, data, results=>{
+    console.log('RESULLTS: ',results);    
+  })
+  //presidents.splice(index, 1, data);
 };
 
 

@@ -64,10 +64,25 @@ const findDocuments = function (db, callback) {
     });
 }
 
+const updateDocument = function(db, id, obj, callback) {
+    // Get the documents collection
+    const collection = db.collection('documents');
+    // Update document where a is 2, set b equal to 1
+    const myquery = { _id: new mongodb.ObjectID(id) };
+    collection.updateOne(myquery
+      , { $set: obj }, function(err, result) {
+      assert.equal(err, null);
+      assert.equal(1, result.result.n);
+      console.log("Updated the document with the field a equal to 2");
+      callback(result);
+    });  
+  }
+
 module.exports = {
     getDocuments, 
     insertDocuments, 
     removeAll, 
     remove,
-    findDocuments
+    findDocuments,
+    updateDocument
 };
