@@ -140,7 +140,6 @@ app.delete('/api/presidents/:id', async(req, res) => {
 
   const id = req.params.id; 
   const index = await getPresidentIndex(id);
-  console.log('INDEX: ', index);
 
   if (index !== -1) {
     dbHelper.remove(db, id);

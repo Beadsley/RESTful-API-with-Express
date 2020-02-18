@@ -20,10 +20,9 @@ const insertDocuments = function (db, obj) {
     collection.insertOne(
         obj
         , function (err, result) {
-            assert.equal(err, null);
-            assert.equal(1, result.result.n);
-            assert.equal(1, result.ops.length);
-            console.log("Inserted document into the collection");
+            if(!err){
+                console.log(`Inserted "${obj.name}" document into the collection`);
+            }
         });
 }
 
@@ -41,13 +40,12 @@ const removeAll = function (db, callback) {
 const remove = function (db, id) {
     // Get the documents collection
     const collection = db.collection('documents');
-    // Delete document where a is 3
-    console.log(id);
-    
+    // Delete document where a is 3    
     const myquery = { _id: new mongodb.ObjectID(id) };
     collection.deleteOne(myquery, function (err) {
-        assert.equal(err, null);
-        console.log("Removed element");
+        if (!err){
+            console.log(`Removed ${id}`);
+        }
     });
 }
 
