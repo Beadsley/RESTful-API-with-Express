@@ -2,6 +2,7 @@ const app = require('express')();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 const bodyParser = require('body-parser');
+const dbHelper = require('./dbHelper');
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'presidents';
@@ -53,11 +54,9 @@ app.listen(3000, () => {
 
       //removeDocument(db, () => { client.close() });
 
-      getDocuments().then(x => {
+      dbHelper.getDocuments(db).then(x => {
         console.log(x);
       });
-
-
 
     }
   });
@@ -75,19 +74,6 @@ const insertDocuments = function (obj) {
       assert.equal(1, result.ops.length);
       console.log("Inserted document into the collection");
     });
-}
-
-
-const getDocuments = () => {
- return new Promise((resolve, reject) => {
-    const collection = db.collection('documents');
-    collection.find({}).toArray(function (err, docs) {
-      if (err) {
-        reject(err);
-      }
-      resolve(docs);
-    });
-  })
 }
 
 // TODO use promises instead of callbacks
@@ -121,7 +107,8 @@ app.get('/api/presidents', async (req, res) => {
   const contentType = req.headers['accept'];
 
   if (contentType === 'application/json') {
-    const presidents = await getDocuments();
+
+    const presidents = await dbHelper.getDocuments(db);
     res.json(presidents);
   }
   else {
