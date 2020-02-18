@@ -11,25 +11,25 @@ const client = new MongoClient(url, { useUnifiedTopology: true });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-let presidents = [
-  {
-    id: '43',
-    from: '2001',
-    to: '2009',
-    name: 'George W. Bush'
-  },
-  {
-    id: '44',
-    from: '2009',
-    to: '2017',
-    name: 'Barack Obama'
-  },
-  {
-    id: '45',
-    from: '2017',
-    name: 'Donald Trump'
-  }
-];
+// let presidents = [
+//   {
+//     id: '43',
+//     from: '2001',
+//     to: '2009',
+//     name: 'George W. Bush'
+//   },
+//   {
+//     id: '44',
+//     from: '2009',
+//     to: '2017',
+//     name: 'Barack Obama'
+//   },
+//   {
+//     id: '45',
+//     from: '2017',
+//     name: 'Donald Trump'
+//   }
+// ];
 
 let db;
 
@@ -90,13 +90,13 @@ app.get('/api/presidents/:id', (req, res) => {
   }
 });
 
-app.post('/api/presidents', (req, res) => {
+app.post('/api/presidents', async (req, res) => {
 
   const contentType = req.headers['content-type'];
   const reqData = req.body;
   let data = validateData(reqData);
-  const exists = presidentExists(reqData.name);
-
+  const exists = await presidentExists(reqData.name);
+  
   if (contentType === 'application/json' && data && !exists) {
     dbHelper.insertDocuments(db, data);
     res.status(201).json(data);
@@ -136,9 +136,9 @@ app.put('/api/presidents/:id', (req, res) => {
   }
 });
 
-app.delete('/api/presidents/:id', async(req, res) => {
+app.delete('/api/presidents/:id', async (req, res) => {
 
-  const id = req.params.id; 
+  const id = req.params.id;
   const index = await getPresidentIndex(id);
 
   if (index !== -1) {
@@ -149,24 +149,28 @@ app.delete('/api/presidents/:id', async(req, res) => {
   }
 });
 
-const getPresident = (id) => presidents.find(president => president.id === id);
+const getPresident = async (id) => {
+  const presidents = await dbHelper.getDocuments(db);
+  return presidents.find(president => president.id === id);
+}
 
-const getPresidentIndex = async(id) => 
-{
-  const presidents = await dbHelper.getDocuments(db);  
+const getPresidentIndex = async (id) => {
+  const presidents = await dbHelper.getDocuments(db);
   return presidents.findIndex(president => president._id.toString() == id);
 }
 
 
-const presidentExists = (name) => presidents.some(president => president.name === name);
+const presidentExists = async (name) => {
+  const presidents = await dbHelper.getDocuments(db);
+  return presidents.some(president => president.name === name);
 
-const updatePresident = (index, data) => {
+}
+
+const updatePresident = async (index, data) => {
+  const presidents = await dbHelper.getDocuments(db);
   presidents.splice(index, 1, data);
 };
 
-const removePresident = (index) => {
-  presidents.splice(index, 1);
-};
 
 const validateData = (data) => {
 
