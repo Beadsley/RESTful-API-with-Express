@@ -52,7 +52,7 @@ app.listen(3000, () => {
       console.log("listenening on port 3000");
       db = client.db(dbName);
 
-      //dbHelper.removeDocument(db, () => { client.close() });
+      //dbHelper.removeAll(db, () => { client.close() });
     }
   });
 });
@@ -98,8 +98,6 @@ app.post('/api/presidents', (req, res) => {
   const exists = presidentExists(reqData.name);
 
   if (contentType === 'application/json' && data && !exists) {
-    const id = nextId(presidents).toString();
-    data = Object.assign({ id }, data);
     dbHelper.insertDocuments(db, data);
     res.status(201).json(data);
   }
@@ -138,13 +136,14 @@ app.put('/api/presidents/:id', (req, res) => {
   }
 });
 
-app.delete('/api/presidents/:id', (req, res) => {
+app.delete('/api/presidents/:id', async(req, res) => {
 
-  const id = req.params.id;
-  const index = getPresidentIndex(id);
+  const id = req.params.id; 
+  const index = await getPresidentIndex(id);
+  console.log('INDEX: ', index);
 
   if (index !== -1) {
-    removePresident(index);
+    dbHelper.remove(db, id);
     res.status(204).send('File removed');
   } else {
     res.status(404).send('File not found');
@@ -153,7 +152,14 @@ app.delete('/api/presidents/:id', (req, res) => {
 
 const getPresident = (id) => presidents.find(president => president.id === id);
 
-const getPresidentIndex = (id) => presidents.findIndex(president => president.id === id);
+const getPresidentIndex = async(id) => 
+{
+  const presidents = await dbHelper.getDocuments(db);
+  console.log(typeof presidents[0]._id, presidents[0]._id);
+  
+  return presidents.findIndex(president => president._id.toString() == id);
+}
+
 
 const presidentExists = (name) => presidents.some(president => president.name === name);
 
