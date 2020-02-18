@@ -51,8 +51,14 @@ app.listen(3000, () => {
       console.log("listenening on port 3000");
       db = client.db(dbName);
 
-       //removeDocument(db, () => { client.close() });
-       
+      //removeDocument(db, () => { client.close() });
+
+      getDocuments().then(x => {
+        console.log(x);
+      });
+
+
+
     }
   });
 });
@@ -62,13 +68,26 @@ const insertDocuments = function (obj) {
   const collection = db.collection('documents');
   // Insert some documents
   collection.insertOne(
-      obj
-      , function (err, result) {
-          assert.equal(err, null);
-          assert.equal(1, result.result.n);
-          assert.equal(1, result.ops.length);
-          console.log("Inserted document into the collection");        
-      });
+    obj
+    , function (err, result) {
+      assert.equal(err, null);
+      assert.equal(1, result.result.n);
+      assert.equal(1, result.ops.length);
+      console.log("Inserted document into the collection");
+    });
+}
+
+
+const getDocuments = () => {
+ return new Promise((resolve, reject) => {
+    const collection = db.collection('documents');
+    collection.find({}).toArray(function (err, docs) {
+      if (err) {
+        reject(err);
+      }
+      resolve(docs);
+    });
+  })
 }
 
 // TODO use promises instead of callbacks
@@ -77,10 +96,10 @@ const findDocuments = function (callback) {
   const collection = db.collection('documents');
   // Find some documents
   collection.find({}).toArray(function (err, docs) {
-      assert.equal(err, null);
-      console.log("Found the following records");
-      console.log(docs.length)
-      callback(docs);
+    assert.equal(err, null);
+    console.log("Found the following records");
+    console.log(docs.length)
+    callback(docs);
   });
 }
 
@@ -90,21 +109,20 @@ const removeDocument = function (db, callback) {
   const collection = db.collection('documents');
   // Delete document where a is 3
   collection.deleteMany({}, function (err, result) {
-      assert.equal(err, null);
-      console.log("Removed everything");
-      callback(result);
+    assert.equal(err, null);
+    console.log("Removed everything");
+    callback(result);
   });
 }
 
 
-app.get('/api/presidents', (req, res) => {
+app.get('/api/presidents', async (req, res) => {
 
   const contentType = req.headers['accept'];
 
   if (contentType === 'application/json') {
-    findDocuments(presidents=>{
-      res.json(presidents);
-    })    
+    const presidents = await getDocuments();
+    res.json(presidents);
   }
   else {
     res.status(400).send('Invalid request');
@@ -140,7 +158,7 @@ app.post('/api/presidents', (req, res) => {
   if (contentType === 'application/json' && data && !exists) {
     const id = nextId(presidents).toString();
     data = Object.assign({ id }, data);
-    insertDocuments(data);    
+    insertDocuments(data);
     res.status(201).json(data);
   }
   else {
