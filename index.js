@@ -95,10 +95,10 @@ app.put('/api/presidents/:id', async (req, res) => {
     const id = req.params.id;
     const index = await getPresidentIndex(id);
     if (index !== -1) {
-      const oldname = await getPresident(id).name;
+      const oldObj = await getPresident(id);      
       const newName = reqData.name;
       const exists = await presidentExists(newName);
-      if (exists && oldname !== newName) {
+      if (exists && oldObj.name !== newName) {
         res.status(400).send('President already exists');
       }
       else {        
@@ -129,7 +129,7 @@ app.delete('/api/presidents/:id', async (req, res) => {
 
 const getPresident = async (id) => {
   const presidents = await dbHelper.getDocuments(db);
-  return presidents.find(president => president.id === id);
+  return presidents.find(president => president._id.toString() === id);
 }
 
 const getPresidentIndex = async (id) => {
