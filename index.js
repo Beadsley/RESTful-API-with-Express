@@ -1,8 +1,8 @@
 const app = require('express')();
 const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
 const bodyParser = require('body-parser');
 const dbHelper = require('./dbHelper');
+const val = require('./validation');
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'presidents';
@@ -30,8 +30,6 @@ app.listen(3000, () => {
     else {
       console.log("listenening on port 3000");
       db = client.db(dbName);
-
-      //dbHelper.removeAll(db, () => { client.close() });
     }
   });
 });
@@ -73,7 +71,7 @@ app.post('/api/presidents', async (req, res) => {
 
   const contentType = req.headers['content-type'];
   const reqData = req.body;
-  let data = validateData(reqData);
+  let data = val.validateData(reqData);
   const exists = await presidentExists(reqData.name);
 
   if (contentType === 'application/json' && data && !exists) {
@@ -89,7 +87,7 @@ app.put('/api/presidents/:id', async (req, res) => {
 
   const contentType = req.headers['content-type'];
   const reqData = req.body;
-  let data = validateData(reqData);
+  let data = val.validateData(reqData);
 
   if (contentType === 'application/json' && data) {
     const id = req.params.id;
@@ -146,55 +144,6 @@ const presidentExists = async (name) => {
 
 const updatePresident = async (id, data) => {  
   await dbHelper.updateDocument(db, id, data);
-};
-
-
-const validateData = (data) => {
-
-  const keys = Object.keys(data);
-
-  if (keys.includes('from' && 'name') && keys.length === 2) {
-    const yearValid = validateYear(Number(data.from));
-    if (yearValid && typeof data.name === 'string') {
-      return {
-        from: data.from.toString(),
-        name: data.name.toString()
-      };
-    }
-    else {
-      return undefined;
-    }
-  }
-  else if (keys.includes('from' && 'to' && 'name') && keys.length === 3) {
-    const yearValid = validateYear(Number(data.from)) && validateYear(Number(data.to)) && (Number(data.from) < Number(data.to));
-    if (yearValid && typeof data.name === 'string') {
-      return {
-        from: data.from.toString(),
-        to: data.to.toString(),
-        name: data.name
-      };
-    }
-    else {
-      return undefined;
-    }
-  }
-  return undefined;
-};
-
-const validateYear = (year) => {
-
-  const firstPresident = 1789;
-  const currentYear = new Date().getFullYear();
-
-  if (isNaN(year) === true) {
-    return false;
-  }
-  else if (year <= currentYear && year >= firstPresident) {
-    return true;
-  }
-  else {
-    return false;
-  }
 };
 
 module.exports.app = app;

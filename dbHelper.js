@@ -29,7 +29,7 @@ const updateDocument = (db, id, obj) => {
                 else {
                     console.log(`Updates with ${obj.name}`);
                     resolve(result);
-                }   
+                }
             });
     })
 };
@@ -47,14 +47,14 @@ const insertDocuments = function (db, obj) {
         });
 };
 
-const removeAll = function (db, callback) {
+const removeAll = function (db) {
 
     const collection = db.collection('documents');
 
     collection.deleteMany({}, function (err, result) {
-        assert.equal(err, null);
-        console.log("Removed everything");
-        callback(result);
+        if (!err) {
+            console.log("Removed everything");
+        }
     });
 };
 
