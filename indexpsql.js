@@ -20,10 +20,13 @@ app.listen(3000, () => {
 });
 
 app.get('/api/presidents', async (req, res) => {
-
-  const result = await dbHelper.getAll();
-  res.status(200).json(result);
-
+  try {
+    const result = await dbHelper.getAll();
+    res.status(200).json(result);
+  }
+  catch (err) {
+    res.status(400).send(err.message);
+  }
 });
 
 

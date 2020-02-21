@@ -28,8 +28,6 @@ const getAll = () => {
             else {
                 resolve(results.rows)
             }
-
-            //response.status(200).json(results.rows)
         })
     })
 }
