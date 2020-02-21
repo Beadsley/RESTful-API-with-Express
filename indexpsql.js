@@ -43,17 +43,29 @@ app.get('/api/presidents/:id', async (req, res) => {
   }
 });
 //no spaces between names
-app.post('/api/presidents', async (req, res) => { 
-console.log('post rrequest');
+app.post('/api/presidents', async (req, res) => {
 
   const reqData = req.body;
-  
+
   try {
     const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);
     res.status(200).json(reqData);
   }
-  catch (err) {    
+  catch (err) {
     res.status(400).send(err.message);
   }
 });
 
+app.put('/api/presidents/:id', async (req, res) => {
+
+  const id = req.params.id;
+  const reqData = req.body;
+
+  try {
+    const result = await dbHelper.update(id, reqData.from, reqData.name, reqData.to);
+    res.status(200).json(result);
+  }
+  catch (err) {
+    res.status(400).send(err.message);
+  }
+});
