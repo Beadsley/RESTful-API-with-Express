@@ -31,9 +31,21 @@ const getAll = () => {
         })
     })
 }
+const get = (id) => {
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM ${TBNAME} WHERE id = ${id}`, (error, results) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results.rows)
+            }
+        })
+    })
+}
 
 
 module.exports = {
-    getAll,
+    getAll, get, 
     createTable
 };

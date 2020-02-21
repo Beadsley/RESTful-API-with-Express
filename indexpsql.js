@@ -28,6 +28,17 @@ app.get('/api/presidents', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+// check for empy result
+app.get('/api/presidents/:id', async(req, res) => {
+  const id = req.params.id;
+  try {
+    const result = await dbHelper.get(id);
+    res.status(200).json(result);
+  }
+  catch (err) {
+    res.status(400).send(err.message);
+  }
+});
 
 
 // INSERT INTO presidents (year_from, date_from, name)
