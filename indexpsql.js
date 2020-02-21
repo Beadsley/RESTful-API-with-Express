@@ -1,18 +1,21 @@
 const dbHelper = require('./psqlHelper');
 const app = require('express')();
+const bodyParser = require('body-parser');
+
 // // used to create a table within the postgres database
 // const createTableQuery = `
 // CREATE TABLE presidents (
 //   ID SERIAL PRIMARY KEY,
 //   year_from TEXT NOT NULL,
-//   date_from TEXT DEFAULT 'not specified',
+//   year_to TEXT DEFAULT 'not specified',
 //   name TEXT NOT NULL
 // );
 // `
 // dbHelper.createTable(createTableQuery);
 
 
-//dbHelper.getAll();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.listen(3000, () => {
   console.log("listenening on port 3000 \n http://localhost:3000/api/presidents");
@@ -29,7 +32,7 @@ app.get('/api/presidents', async (req, res) => {
   }
 });
 // check for empy result
-app.get('/api/presidents/:id', async(req, res) => {
+app.get('/api/presidents/:id', async (req, res) => {
   const id = req.params.id;
   try {
     const result = await dbHelper.get(id);
@@ -39,7 +42,18 @@ app.get('/api/presidents/:id', async(req, res) => {
     res.status(400).send(err.message);
   }
 });
+//no spaces between names
+app.post('/api/presidents', async (req, res) => { 
+console.log('post rrequest');
 
+  const reqData = req.body;
+  
+  try {
+    const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);
+    res.status(200).json(reqData);
+  }
+  catch (err) {    
+    res.status(400).send(err.message);
+  }
+});
 
-// INSERT INTO presidents (year_from, date_from, name)
-//   VALUES ('2010', '2020','jerry'), ('2010','2222', 'george');

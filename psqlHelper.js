@@ -44,8 +44,28 @@ const get = (id) => {
     })
 }
 
+const insert = (from, name, _to) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+        INSERT INTO ${TBNAME} (year_from, year_to, name)
+        VALUES ('${from.toString()}', '${_to.toString()}', '${name.toString()}');
+        `
+        console.log(query);
+        
+        pool.query(query, (error, results) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results.rows)
+            }
+        })
+    })
+}
 
 module.exports = {
-    getAll, get, 
+    getAll, 
+    get, 
+    insert, 
     createTable
 };
