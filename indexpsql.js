@@ -1,16 +1,31 @@
-const Pool = require('pg').Pool;
-const pool = new Pool({
-  user: 'danielbeadleson',
-  host: 'localhost',
-  database: 'presidents',
-  port: 5432,
+const dbHelper = require('./psqlHelper');
+const app = require('express')();
+// // used to create a table within the postgres database
+// const createTableQuery = `
+// CREATE TABLE presidents (
+//   ID SERIAL PRIMARY KEY,
+//   year_from TEXT NOT NULL,
+//   date_from TEXT DEFAULT 'not specified',
+//   name TEXT NOT NULL
+// );
+// `
+// dbHelper.createTable(createTableQuery);
+
+
+//dbHelper.getAll();
+
+app.listen(3000, () => {
+  console.log("listenening on port 3000 \n http://localhost:3000/api/presidents");
+
 });
 
-pool.query('SELECT * FROM books', (error, results) => {
-    if (error) {
-      throw error
-    }
-    console.log(results.rows);
-    
-    //response.status(200).json(results.rows)
-  })
+app.get('/api/presidents', async (req, res) => {
+
+  const result = await dbHelper.getAll();
+  res.status(200).json(result);
+
+});
+
+
+// INSERT INTO presidents (year_from, date_from, name)
+//   VALUES ('2010', '2020','jerry'), ('2010','2222', 'george');
