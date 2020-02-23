@@ -1,5 +1,6 @@
 # RESTful API with PostgreSQL
 ## Prerequisites 
+* Install dependencies `npm i`
 * Install mongodb 
 * Run mongodb server via terminal with `mongod` 
 * Run mongodb client via sperate terminal tab with `mongo`

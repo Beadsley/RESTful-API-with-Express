@@ -1,5 +1,6 @@
 # RESTful API with PostgreSQL
 ## Prerequisites 
+* Install dependencies `npm i`
 * Install PostgreSQL : `brew install postgresql`
 * Start PostgreSQL Server: `pg_ctl -D /usr/local/var/postgres start`
 * Create database using postgres: `psql postgres`
