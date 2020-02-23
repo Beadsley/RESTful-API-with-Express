@@ -1,7 +1,6 @@
 const Pool = require('pg').Pool;
 const TBNAME = 'presidents';
 
-
 const pool = new Pool({
     user: 'danielbeadleson',
     host: 'localhost',
