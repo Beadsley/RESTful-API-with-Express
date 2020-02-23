@@ -1,4 +1,4 @@
-# RESTful API with PostgreSQL
+# RESTful API with mongoDB
 ## Prerequisites 
 * Install dependencies `npm i`
 * Install mongodb 
