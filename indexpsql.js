@@ -45,7 +45,7 @@ app.get('/api/presidents/:id', async (req, res) => {
       res.status(200).json(president);
     }
     else {
-      res.status(404).send({ message: 'Not Found' });
+      res.status(204).send({ message: `File with id: ${id} not found`});
     }
   }
   catch (err) {
@@ -65,7 +65,7 @@ app.post('/api/presidents', async (req, res) => {
 
     if (president.length === 0) {
       try {
-        const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);        
+        const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);
         res.status(200).json(reqData);
       }
       catch (err) {
@@ -73,7 +73,7 @@ app.post('/api/presidents', async (req, res) => {
       }
     }
     else {
-      res.status(400).send({ message: 'President already exists' });
+      res.status(400).send({ message: `President: '${reqData.name}' already exists`});
     }
 
   }
@@ -87,15 +87,38 @@ app.post('/api/presidents', async (req, res) => {
 
 app.put('/api/presidents/:id', async (req, res) => {
 
-  const id = req.params.id;
+  const contentType = req.headers['content-type'];
   const reqData = req.body;
+  let data = val.validateData(reqData);
 
-  try {
-    const result = await dbHelper.update(id, reqData.from, reqData.name, reqData.to);
-    res.status(200).json(result);
+  if (contentType === 'application/json' && data) {
+
+    const id = req.params.id;
+    const president = await dbHelper.getByID(id);
+
+    if (president.length !== 0) {
+      const oldName = president[0].name;
+      const newName = reqData.name;
+      const exists = await dbHelper.getByName(newName);      
+
+      if (exists.length !== 0 && oldName !== newName) {
+        res.status(400).send({ message: `President: '${newName}' already exists`});
+      }
+      else {
+        try {
+          const result = await dbHelper.update(id, reqData.from, reqData.name, reqData.to);
+          res.status(200).json(reqData);
+        }
+        catch (err) {
+          res.status(400).send({ message: err.message });
+        }
+      }
+    } else {
+      res.status(204).send({ message: `File with id: '${id}' not found`});
+    }
   }
-  catch (err) {
-    res.status(400).send(err.message);
+  else {
+    res.status(400).send({ message: 'Invalid request' });
   }
 });
 
