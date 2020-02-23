@@ -17,7 +17,7 @@ const createTable = (query) => {
         console.log('table created');
 
     })
-}
+};
 
 const getAll = () => {
     return new Promise((resolve, reject) => {
@@ -30,8 +30,9 @@ const getAll = () => {
             }
         })
     })
-}
+};
 //sort the list
+
 const get = (id) => {
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * FROM ${TBNAME} WHERE id = ${id}`, (error, results) => {
@@ -43,7 +44,7 @@ const get = (id) => {
             }
         })
     })
-}
+};
 
 const insert = (from, name, _to) => {
     return new Promise((resolve, reject) => {
@@ -60,7 +61,7 @@ const insert = (from, name, _to) => {
             }
         })
     })
-}
+};
 
 const update = (id, from, name, _to) => {
     return new Promise((resolve, reject) => {
@@ -70,9 +71,7 @@ const update = (id, from, name, _to) => {
         year_to = '${_to}',
         name = '${name}' 
         WHERE id = ${id};
-        `
-        console.log(query);
-        
+        `        
         pool.query(query, (error, results) => {
             if (error) {
                 reject(error);
@@ -82,12 +81,32 @@ const update = (id, from, name, _to) => {
             }
         })
     })
-}
+};
+
+const remove = (id) => {
+    return new Promise((resolve, reject) => {
+        const query = `
+        DELETE FROM ${TBNAME}
+        WHERE id = ${id};
+        `
+        pool.query(query, (error, results) => {
+            console.log(results);
+            
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results)
+            }
+        })       
+    })
+};
 
 module.exports = {
     getAll, 
     get, 
     insert, 
     update,
-    createTable
+    createTable,
+    remove
 };

@@ -69,3 +69,16 @@ app.put('/api/presidents/:id', async (req, res) => {
     res.status(400).send(err.message);
   }
 });
+
+app.delete('/api/presidents/:id', async (req, res) => {
+
+
+
+  const id = req.params.id;
+
+  const results = await dbHelper.remove(id);
+  console.log(results);
+  res.status(204).end();
+  
+
+});
