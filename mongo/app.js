@@ -2,7 +2,7 @@ const app = require('express')();
 const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const dbHelper = require('./dbHelper');
-const val = require('./validation');
+const val = require('../validation');
 
 const url = 'mongodb://localhost:27017';
 const dbName = 'presidents';
