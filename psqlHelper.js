@@ -33,9 +33,9 @@ const getAll = () => {
 };
 //sort the list
 
-const get = (id) => {
+const getByID = (id) => {
     return new Promise((resolve, reject) => {
-        pool.query(`SELECT * FROM ${TBNAME} WHERE id = ${id}`, (error, results) => {
+        pool.query(`SELECT * FROM ${TBNAME} WHERE id = ${id};`, (error, results) => {
             if (error) {
                 reject(error);
             }
@@ -45,6 +45,20 @@ const get = (id) => {
         })
     })
 };
+
+const getByName = (name) => {
+    
+    return new Promise((resolve, reject) => {
+        pool.query(`SELECT * FROM ${TBNAME} WHERE name = '${name}';`, (error, results) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results.rows)
+            }
+        })
+    })
+}
 
 const insert = (from, name, _to) => {
     return new Promise((resolve, reject) => {
@@ -104,9 +118,10 @@ const remove = (id) => {
 
 module.exports = {
     getAll, 
-    get, 
+    getByID, 
     insert, 
     update,
     createTable,
-    remove
+    remove,
+    getByName,
 };

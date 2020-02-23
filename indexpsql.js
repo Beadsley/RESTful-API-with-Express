@@ -1,6 +1,7 @@
 const dbHelper = require('./psqlHelper');
 const app = require('express')();
 const bodyParser = require('body-parser');
+const val = require('./validation');
 
 // // used to create a table within the postgres database
 // const createTableQuery = `
@@ -37,11 +38,11 @@ app.get('/api/presidents', async (req, res) => {
 app.get('/api/presidents/:id', async (req, res) => {
 
   const id = req.params.id;
-  
+
   try {
-    const result = await dbHelper.get(id);
-    if (result.length !== 0) {
-      res.status(200).json(result);
+    const president = await dbHelper.getByID(id);
+    if (president.length !== 0) {
+      res.status(200).json(president);
     }
     else {
       res.status(404).send({ message: 'Not Found' });
@@ -51,18 +52,37 @@ app.get('/api/presidents/:id', async (req, res) => {
     res.status(400).send({ error: err.message });
   }
 });
-//no spaces between names
+
 app.post('/api/presidents', async (req, res) => {
 
+  const contentType = req.headers['content-type'];
   const reqData = req.body;
+  let data = val.validateData(reqData);
 
-  try {
-    const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);
-    res.status(200).json(reqData);
+  if (contentType === 'application/json' && data) {
+
+    let president = await dbHelper.getByName(data.name);
+
+    if (president.length === 0) {
+      try {
+        const result = await dbHelper.insert(reqData.from, reqData.name, reqData.to);        
+        res.status(200).json(reqData);
+      }
+      catch (err) {
+        res.status(400).send({ message: err.message });
+      }
+    }
+    else {
+      res.status(400).send({ message: 'President already exists' });
+    }
+
   }
-  catch (err) {
-    res.status(400).send(err.message);
+  else {
+    res.status(400).send({ message: 'Invalid request' });
   }
+
+
+
 });
 
 app.put('/api/presidents/:id', async (req, res) => {
