@@ -23,23 +23,32 @@ app.listen(3000, () => {
 });
 
 app.get('/api/presidents', async (req, res) => {
+
   try {
     const result = await dbHelper.getAll();
     res.status(200).json(result);
   }
   catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({ error: err.message });
   }
 });
-// check for empy result
+
+
 app.get('/api/presidents/:id', async (req, res) => {
+
   const id = req.params.id;
+  
   try {
     const result = await dbHelper.get(id);
-    res.status(200).json(result);
+    if (result.length !== 0) {
+      res.status(200).json(result);
+    }
+    else {
+      res.status(404).send({ message: 'Not Found' });
+    }
   }
   catch (err) {
-    res.status(400).send(err.message);
+    res.status(400).send({ error: err.message });
   }
 });
 //no spaces between names
@@ -79,6 +88,6 @@ app.delete('/api/presidents/:id', async (req, res) => {
   const results = await dbHelper.remove(id);
   console.log(results);
   res.status(204).end();
-  
+
 
 });
