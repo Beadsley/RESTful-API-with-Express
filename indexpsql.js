@@ -80,9 +80,6 @@ app.post('/api/presidents', async (req, res) => {
   else {
     res.status(400).send({ message: 'Invalid request' });
   }
-
-
-
 });
 
 app.put('/api/presidents/:id', async (req, res) => {
@@ -97,6 +94,7 @@ app.put('/api/presidents/:id', async (req, res) => {
     const president = await dbHelper.getByID(id);
 
     if (president.length !== 0) {
+      
       const oldName = president[0].name;
       const newName = reqData.name;
       const exists = await dbHelper.getByName(newName);      
@@ -124,13 +122,19 @@ app.put('/api/presidents/:id', async (req, res) => {
 
 app.delete('/api/presidents/:id', async (req, res) => {
 
-
-
   const id = req.params.id;
+  const president = await dbHelper.getByID(id);
 
-  const results = await dbHelper.remove(id);
-  console.log(results);
-  res.status(204).end();
-
-
+  if (president.length !== 0) {
+    try{
+      const results = await dbHelper.remove(id);
+      res.status(204).end();    
+    }
+    catch(err){
+      res.status(400).send({ message: err.message });
+    }
+  }
+  else {
+    res.status(400).send({ message: 'Invalid request' });
+  }
 });

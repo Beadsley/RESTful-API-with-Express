@@ -104,7 +104,6 @@ const remove = (id) => {
         WHERE id = ${id};
         `
         pool.query(query, (error, results) => {
-            console.log(results);
             
             if (error) {
                 reject(error);
