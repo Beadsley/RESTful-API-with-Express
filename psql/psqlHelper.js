@@ -46,7 +46,7 @@ const getByID = (id) => {
 };
 
 const getByName = (name) => {
-    
+
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * FROM ${TBNAME} WHERE name = '${name}';`, (error, results) => {
             if (error) {
@@ -60,11 +60,21 @@ const getByName = (name) => {
 }
 
 const insert = (from, name, _to) => {
+
     return new Promise((resolve, reject) => {
-        const query = `
-        INSERT INTO ${TBNAME} (year_from, year_to, name)
-        VALUES ('${from}', '${_to}', '${name}');
-        `        
+        let query = '';
+        if (_to === undefined) {
+            query = `
+            INSERT INTO ${TBNAME} (year_from, name)
+            VALUES ('${from}', '${name}');
+            `
+        }
+        else {
+            query = `
+            INSERT INTO ${TBNAME} (year_from, year_to, name)
+            VALUES ('${from}', '${_to}', '${name}');
+            `
+        }
         pool.query(query, (error, results) => {
             if (error) {
                 reject(error);
@@ -84,7 +94,7 @@ const update = (id, from, name, _to) => {
         year_to = '${_to}',
         name = '${name}' 
         WHERE id = ${id};
-        `        
+        `
         pool.query(query, (error, results) => {
             if (error) {
                 reject(error);
@@ -103,21 +113,21 @@ const remove = (id) => {
         WHERE id = ${id};
         `
         pool.query(query, (error, results) => {
-            
+
             if (error) {
                 reject(error);
             }
             else {
                 resolve(results)
             }
-        })       
+        })
     })
 };
 
 module.exports = {
-    getAll, 
-    getByID, 
-    insert, 
+    getAll,
+    getByID,
+    insert,
     update,
     createTable,
     remove,

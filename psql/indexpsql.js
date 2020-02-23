@@ -1,7 +1,7 @@
 const dbHelper = require('./psqlHelper');
 const app = require('express')();
 const bodyParser = require('body-parser');
-const val = require('./validation');
+const val = require('../validation');
 
 // // used to create a table within the postgres database
 // const createTableQuery = `
