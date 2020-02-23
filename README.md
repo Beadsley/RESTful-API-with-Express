@@ -26,6 +26,6 @@ For each president the following rules apply:
 
 
 ## Database Implementation 
-1) with mongodb under the [mongo](https://github.com/user/repo/blob/branch/other_file.md) direcory
+1) with mongodb under the [mongo](https://github.com/Beadsley/presidents/tree/master/mongo) direcory
 
-2) with PostgreSQL under the [psql](https://github.com/user/repo/blob/branch/other_file.md) direcory
+2) with PostgreSQL under the [psql](https://github.com/Beadsley/presidents/tree/master/psql) direcory
