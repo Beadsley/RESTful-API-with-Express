@@ -45,7 +45,7 @@ app.get('/api/presidents/:id', async (req, res) => {
       res.status(200).json(president);
     }
     else {
-      res.status(204).send({ message: `File with id: ${id} not found`});
+      res.status(400).send({ message: `File with id: ${id} not found`});
     }
   }
   catch (err) {
@@ -124,7 +124,7 @@ app.delete('/api/presidents/:id', async (req, res) => {
 
   const id = req.params.id;
   const president = await dbHelper.getByID(id);
-
+  
   if (president.length !== 0) {
     try{
       const results = await dbHelper.remove(id);
@@ -135,6 +135,6 @@ app.delete('/api/presidents/:id', async (req, res) => {
     }
   }
   else {
-    res.status(400).send({ message: 'Invalid request' });
+    res.status(400).send({ message: `File with id: '${id}' not found`});
   }
 });

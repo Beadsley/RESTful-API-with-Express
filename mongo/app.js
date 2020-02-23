@@ -36,35 +36,27 @@ app.listen(3000, () => {
 
 app.get('/api/presidents', async (req, res) => {
 
-  const contentType = req.headers['accept'];
-
-  if (contentType === 'application/json') {
-
-    const presidents = await dbHelper.getDocuments(db);
-    res.json(presidents);
-  }
-  else {
-    res.status(400).send('Invalid request');
-  }
+    try {
+      const presidents = await dbHelper.getDocuments(db);
+      res.json(presidents);
+    }
+    catch (err) {
+      res.status(400).send({ error: err.message });
+    }
 });
 
-app.get('/api/presidents/:id', (req, res) => {
+app.get('/api/presidents/:id', async(req, res) => {
 
-  const contentType = req.headers['accept'];
-
-  if (contentType === 'application/json') {
     const id = req.params.id;
-    const president = getPresident(id);
-    if (president) {
+    const president = await getPresident(id);
+    
+    if (president !== undefined) {
       res.json(president);
     }
     else {
-      res.status(404).send('Not Found');
+      res.status(400).send({ message: `File with id: ${id} not found`});
     }
-  }
-  else {
-    res.status(400).send('Invalid request');
-  }
+    
 });
 
 app.post('/api/presidents', async (req, res) => {
@@ -79,7 +71,7 @@ app.post('/api/presidents', async (req, res) => {
     res.status(201).json(data);
   }
   else {
-    res.status(400).send('Invalid request');
+    res.status(400).send({ message: 'Invalid request' });
   }
 });
 
@@ -92,23 +84,24 @@ app.put('/api/presidents/:id', async (req, res) => {
   if (contentType === 'application/json' && data) {
     const id = req.params.id;
     const index = await getPresidentIndex(id);
+    
     if (index !== -1) {
       const oldObj = await getPresident(id);      
       const newName = reqData.name;
       const exists = await presidentExists(newName);
       if (exists && oldObj.name !== newName) {
-        res.status(400).send('President already exists');
+        res.status(400).send({ message: `President: '${newName}' already exists`});
       }
       else {        
         updatePresident(id, data);
-        res.status(200).send('File updated');
+        res.status(200).send(reqData);
       }
     } else {
-      res.status(204).send('File not found');
+      res.status(204).send({ message: `File with id: '${id}' not found`});
     }
   }
   else {
-    res.status(400).send('Invalid request');
+    res.status(400).send({ message: 'Invalid request' });
   }
 });
 
@@ -116,12 +109,12 @@ app.delete('/api/presidents/:id', async (req, res) => {
 
   const id = req.params.id;
   const index = await getPresidentIndex(id);
-
+  
   if (index !== -1) {
     dbHelper.remove(db, id);
-    res.status(204).send('File removed');
+    res.status(204).end();
   } else {
-    res.status(404).send('File not found');
+    res.status(400).send({ message: `File with id: '${id}' not found`});
   }
 });
 
