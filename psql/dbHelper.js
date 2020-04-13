@@ -14,8 +14,7 @@ const createTable = (query) => {
             throw error
         }
         console.log('table created');
-
-    })
+    });
 };
 
 const getAll = () => {
@@ -25,12 +24,11 @@ const getAll = () => {
                 reject(error);
             }
             else {
-                resolve(results.rows)
+                resolve(results.rows);
             }
         })
-    })
+    });
 };
-//sort the list
 
 const getByID = (id) => {
     return new Promise((resolve, reject) => {
@@ -39,28 +37,26 @@ const getByID = (id) => {
                 reject(error);
             }
             else {
-                resolve(results.rows)
+                resolve(results.rows);
             }
-        })
-    })
+        });
+    });
 };
 
 const getByName = (name) => {
-
     return new Promise((resolve, reject) => {
         pool.query(`SELECT * FROM ${TBNAME} WHERE name = '${name}';`, (error, results) => {
             if (error) {
                 reject(error);
             }
             else {
-                resolve(results.rows)
+                resolve(results.rows);
             }
-        })
-    })
-}
+        });
+    });
+};
 
 const insert = (from, name, _to) => {
-
     return new Promise((resolve, reject) => {
         let query = '';
         if (_to === undefined) {
@@ -80,10 +76,10 @@ const insert = (from, name, _to) => {
                 reject(error);
             }
             else {
-                resolve(results.rows)
+                resolve(results.rows);
             }
-        })
-    })
+        });
+    });
 };
 
 const update = (id, from, name, _to) => {
@@ -102,8 +98,8 @@ const update = (id, from, name, _to) => {
             else {
                 resolve(results.rows)
             }
-        })
-    })
+        });
+    });
 };
 
 const remove = (id) => {
@@ -113,15 +109,14 @@ const remove = (id) => {
         WHERE id = ${id};
         `
         pool.query(query, (error, results) => {
-
             if (error) {
                 reject(error);
             }
             else {
                 resolve(results)
             }
-        })
-    })
+        });
+    });
 };
 
 module.exports = {
