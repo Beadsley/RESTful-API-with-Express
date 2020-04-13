@@ -1,6 +1,4 @@
-
 const validateData = (data) => {
-
     const keys = Object.keys(data);
   
     if (keys.includes('from' && 'name') && keys.length === 2) {
@@ -31,8 +29,7 @@ const validateData = (data) => {
     return undefined;
   };
   
-  const validateYear = (year) => {
-  
+  const validateYear = (year) => {  
     const firstPresident = 1789;
     const currentYear = new Date().getFullYear();
   
