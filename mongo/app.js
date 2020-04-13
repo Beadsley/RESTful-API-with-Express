@@ -3,24 +3,19 @@ const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
 const dbHelper = require('./dbHelper');
 const val = require('../validation');
-
 const url = 'mongodb://localhost:27017';
 const dbName = 'presidents';
 const client = new MongoClient(url, { useUnifiedTopology: true });
+let db;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-let db;
 
 const nextId = (presidents) => {
   const highestId = presidents.reduce((a, c) => c.id > a ? c.id : a, 0);
   return Number.parseInt(highestId) + 1;
 };
 
-/**
- * mongod, and mongo to connect to the mongo server
- */
 app.listen(3000, () => {
   client.connect(function (err) {
     if (err) {
@@ -35,32 +30,27 @@ app.listen(3000, () => {
 });
 
 app.get('/api/presidents', async (req, res) => {
-
-    try {
-      const presidents = await dbHelper.getDocuments(db);
-      res.json(presidents);
-    }
-    catch (err) {
-      res.status(400).send({ error: err.message });
-    }
+  try {
+    const presidents = await dbHelper.getDocuments(db);
+    res.json(presidents);
+  } catch (err) {
+    res.status(400).send({ error: err.message });
+  }
 });
 
-app.get('/api/presidents/:id', async(req, res) => {
+app.get('/api/presidents/:id', async (req, res) => {
+  const id = req.params.id;
+  const president = await getPresident(id);
 
-    const id = req.params.id;
-    const president = await getPresident(id);
-    
-    if (president !== undefined) {
-      res.json(president);
-    }
-    else {
-      res.status(400).send({ message: `File with id: ${id} not found`});
-    }
-    
+  if (president !== undefined) {
+    res.json(president);
+  }
+  else {
+    res.status(400).send({ message: `File with id: ${id} not found` });
+  }
 });
 
 app.post('/api/presidents', async (req, res) => {
-
   const contentType = req.headers['content-type'];
   const reqData = req.body;
   let data = val.validateData(reqData);
@@ -76,7 +66,6 @@ app.post('/api/presidents', async (req, res) => {
 });
 
 app.put('/api/presidents/:id', async (req, res) => {
-
   const contentType = req.headers['content-type'];
   const reqData = req.body;
   let data = val.validateData(reqData);
@@ -84,20 +73,20 @@ app.put('/api/presidents/:id', async (req, res) => {
   if (contentType === 'application/json' && data) {
     const id = req.params.id;
     const index = await getPresidentIndex(id);
-    
+
     if (index !== -1) {
-      const oldObj = await getPresident(id);      
+      const oldObj = await getPresident(id);
       const newName = reqData.name;
       const exists = await presidentExists(newName);
       if (exists && oldObj.name !== newName) {
-        res.status(400).send({ message: `President: '${newName}' already exists`});
+        res.status(400).send({ message: `President: '${newName}' already exists` });
       }
-      else {        
+      else {
         updatePresident(id, data);
         res.status(200).send(reqData);
       }
     } else {
-      res.status(204).send({ message: `File with id: '${id}' not found`});
+      res.status(204).send({ message: `File with id: '${id}' not found` });
     }
   }
   else {
@@ -106,15 +95,14 @@ app.put('/api/presidents/:id', async (req, res) => {
 });
 
 app.delete('/api/presidents/:id', async (req, res) => {
-
   const id = req.params.id;
   const index = await getPresidentIndex(id);
-  
+
   if (index !== -1) {
     dbHelper.remove(db, id);
     res.status(204).end();
   } else {
-    res.status(400).send({ message: `File with id: '${id}' not found`});
+    res.status(400).send({ message: `File with id: '${id}' not found` });
   }
 });
 
@@ -128,14 +116,12 @@ const getPresidentIndex = async (id) => {
   return presidents.findIndex(president => president._id.toString() == id);
 }
 
-
 const presidentExists = async (name) => {
   const presidents = await dbHelper.getDocuments(db);
   return presidents.some(president => president.name === name);
-
 }
 
-const updatePresident = async (id, data) => {  
+const updatePresident = async (id, data) => {
   await dbHelper.updateDocument(db, id, data);
 };
 
