@@ -1,14 +1,13 @@
 {
-  "name": "salt-jsfs-test-restingAPI",
+  "name": "express-API",
   "version": "1.0.0",
-  "description": "Test of REST Api",
   "main": "index.js",
   "scripts": {
     "lint": "eslint index.js",
     "test": "mocha ."
   },
   "keywords": [],
-  "author": "Marcus Hammarberg <marcusoftnet@gmail.com> (http://www.marcusoft.net)",
+  "author": "Beadsley",
   "license": "MIT",
   "devDependencies": {
     "eslint": "6.7.1",
