@@ -29,3 +29,6 @@ For each president the following rules apply:
 1) with mongodb under the [mongo](https://github.com/Beadsley/presidents/tree/master/mongo) direcory
 
 2) with PostgreSQL under the [psql](https://github.com/Beadsley/presidents/tree/master/psql) direcory
+
+## Swagger documentation
+More information can be found under the endpoint `/api/docs`.
