@@ -1,0 +1,107 @@
+swagger: "2.0"
+info:
+  description: "The RESTful implementation allows users to create, collect, update and remove American presidents."
+  version: "1.0.0"
+  title: "Presidents API"
+  termsOfService: "https://github.com/Beadsley/RESTful-API-with-Express/blob/master/LICENSE"
+  contact:
+    email: "danbeadleson@gmail.com"
+tags:
+- name: "president"
+  description: "Information about US presidents"
+schemes:
+- "http"
+paths:
+  /api/presidents:
+    get:
+      tags:
+      - "president"
+      summary: "Finds all"
+      description: ""
+      produces:
+      - "application/json"
+      responses:
+        400:
+          description: "Invalid Request"
+    post:      
+      tags:
+      - "president"
+      summary: "Adds a president to the database"
+      description: ""
+      consumes:
+      - "application/x-www-form-urlencoded"
+      - "application/json"      
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "formData"
+        description: "name of the president"
+        required: true
+        type: "string"
+      - name: "from"
+        in: "formData"
+        description: "Year started term (YYYY)"
+        required: true
+        type: "string"
+      - name: "to"
+        in: "formData"
+        description: "Year ended presidencies (YYYY)"
+        required: false
+        type: "string"        
+      responses:
+        400:
+          description: "Invalid Request"
+  /api/presidents/{id}:
+    get:
+      tags:
+      - "president"
+      summary: "Find by id"
+      description: ""
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of president"
+        required: true
+        type: "integer"
+        format: "int64"    
+      responses:
+        400:
+          description: "Invalid Request" 
+    put:
+      tags:
+      - "president"
+      summary: "Update an existing president"
+      description: ""
+      consumes:
+      - "application/x-www-form-urlencoded"      
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of president"
+        required: true
+        type: "integer"
+        format: "int64"       
+      - name: "name"
+        in: "formData"
+        description: "name of the president"
+        required: true
+        type: "string"
+      - name: "from"
+        in: "formData"
+        description: "Year started term (YYYY)"
+        required: true
+        type: "string"
+      - name: "to"
+        in: "formData"
+        description: "Year ended presidencies (YYYY)"
+        required: false
+        type: "string"        
+      responses:
+        400:
+          description: "Invalid Request"

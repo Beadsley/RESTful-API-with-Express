@@ -2,6 +2,7 @@ const dbHelper = require('./dbHelper');
 const app = require('express')();
 const bodyParser = require('body-parser');
 const val = require('../validation');
+const {serve, setup} = require('../swagger');
 // // used to create a table within the postgres database
 // const createTableQuery = `
 // CREATE TABLE presidents (
@@ -15,6 +16,7 @@ const val = require('../validation');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use('/api/docs', serve, setup);
 
 app.listen(3000, () => {
   console.log("listenening on port 3000 \n http://localhost:3000/api/presidents");
